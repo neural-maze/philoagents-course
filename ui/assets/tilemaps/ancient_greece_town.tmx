@@ -2294,7 +2294,7 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="455" name="forest_tiles" tilewidth="32" tileheight="32" tilecount="256" columns="16">
+ <tileset firstgid="455" name="forest_tiles" tilewidth="32" tileheight="32" tilecount="192" columns="16">
   <properties>
    <property name="collides" type="bool" value="false"/>
   </properties>
@@ -3399,7 +3399,7 @@
   <object id="280" name="Exit Door" x="493.846" y="56.9231">
    <point/>
   </object>
-  <object id="281" name="Socrates" x="144" y="240">
+  <object id="281" name="Socrates" x="392.485" y="391.515">
    <point/>
   </object>
   <object id="282" name="Plato" x="958" y="274">

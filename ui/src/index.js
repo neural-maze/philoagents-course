@@ -1,9 +1,3 @@
-/**
- * Author: Michael Hadley, mikewesthad.com
- * Asset Credits:
- *  - Tuxemon, https://github.com/Tuxemon/Tuxemon
- */
-
 const config = {
   type: Phaser.AUTO,
   width: 800,
@@ -27,6 +21,8 @@ const game = new Phaser.Game(config);
 let cursors;
 let player;
 let player2;
+let player3;  // Socrates
+let player4;  // Plato
 let showDebug = false;
 let dialogueBox;
 let dialogueText;
@@ -34,20 +30,13 @@ let isNearPlayer2;
 let isTyping = false;
 let currentMessage = '';
 
-// Add these with other global variables at the top
-let npcStartPosition;
-let npcEndPosition;
-let npcDirection = 1; // 1 for moving to end point, -1 for returning
-let npcTimer;
-let npcIsMoving = false;
-const NPC_SPEED = 50;
-const PAUSE_DURATION = 3000; // 3 seconds pause at each end
-
 // Add this with other global variables at the top
 let isInDialogue = false;
 
 // Add this with other global variables at the top
 const API_URL = 'http://localhost:8000';
+
+let currentPhilosopher = null; // Add this with other global variables at the top
 
 async function sendMessageToAPI(message) {
   try {
@@ -56,7 +45,10 @@ async function sendMessageToAPI(message) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message: message , philosopher_id: "descartes" })
+      body: JSON.stringify({ 
+        message: message, 
+        philosopher_id: currentPhilosopher 
+      })
     });
     
     if (!response.ok) {
@@ -84,7 +76,9 @@ function preload() {
   
   // Load both atlases
   this.load.atlas("atlas", "../assets/miguel/atlas.png", "../assets/miguel/atlas.json");
-  this.load.atlas("descartes", "../assets/descartes/atlas.png", "../assets/descartes/atlas.json");
+  this.load.atlas("aristotle", "../assets/aristotle/atlas.png", "../assets/aristotle/atlas.json");
+  this.load.atlas("socrates", "../assets/socrates/atlas.png", "../assets/socrates/atlas.json");
+  this.load.atlas("plato", "../assets/plato/atlas.png", "../assets/plato/atlas.json");
 }
 
 function create() {
@@ -122,28 +116,35 @@ function create() {
     .setSize(30, 40)
     .setOffset(0, 24);
 
-  // Set NPC patrol points (adjust these coordinates as needed for your map)
-  npcStartPosition = { x: 400, y: 300 }; // Starting position
-  npcEndPosition = { x: 600, y: 300 };   // End position of patrol
-
-  // Create NPC at the start position instead of near player
+  // Replace the NPC position setup with aristotleSpawnPoint
   player2 = this.physics.add
-    .sprite(npcStartPosition.x, npcStartPosition.y, "descartes", "descartes-front")
+    .sprite(aristotleSpawnPoint.x, aristotleSpawnPoint.y, "aristotle", "aristotle-left")
     .setSize(30, 40)
     .setOffset(0, 24)
     .setImmovable(true);
 
-  // Initialize NPC movement timer
-  npcTimer = this.time.addEvent({
-    delay: PAUSE_DURATION,
-    callback: startNPCMovement,
-    callbackScope: this,
-    loop: true
-  });
+  // Create Socrates
+  player3 = this.physics.add
+    .sprite(socratesSpawnPoint.x, socratesSpawnPoint.y, "socrates", "socrates-front")
+    .setSize(30, 40)
+    .setOffset(0, 24)
+    .setImmovable(true);
+
+  // Create Plato
+  player4 = this.physics.add
+    .sprite(platoSpawnPoint.x, platoSpawnPoint.y, "plato", "plato-left")
+    .setSize(30, 40)
+    .setOffset(0, 24)
+    .setImmovable(true);
 
   // Add colliders for both players
   this.physics.add.collider(player, worldLayer);
   this.physics.add.collider(player, player2);
+  this.physics.add.collider(player, player3);
+  this.physics.add.collider(player, player4);
+  this.physics.add.collider(player2, worldLayer);
+  this.physics.add.collider(player3, worldLayer);
+  this.physics.add.collider(player4, worldLayer);
 
   // Create the player's walking animations from the texture atlas. These are stored in the global
   // animation manager so any sprite can access them.
@@ -189,11 +190,11 @@ function create() {
     repeat: -1,
   });
 
-  // Create animations for Descartes
+  // Create animations for Aristotle
   anims.create({
-    key: "descartes-left-walk",
-    frames: anims.generateFrameNames("descartes", {
-      prefix: "descartes-left-walk-",
+    key: "aristotle-left-walk",
+    frames: anims.generateFrameNames("aristotle", {
+      prefix: "aristotle-left-walk-",
       end: 9,
       zeroPad: 4,
     }),
@@ -201,9 +202,9 @@ function create() {
     repeat: -1,
   });
   anims.create({
-    key: "descartes-right-walk",
-    frames: anims.generateFrameNames("descartes", {
-      prefix: "descartes-right-walk-",
+    key: "aristotle-right-walk",
+    frames: anims.generateFrameNames("aristotle", {
+      prefix: "aristotle-right-walk-",
       end: 9,
       zeroPad: 4,
     }),
@@ -211,9 +212,9 @@ function create() {
     repeat: -1,
   });
   anims.create({
-    key: "descartes-front-walk",
-    frames: anims.generateFrameNames("descartes", {
-      prefix: "descartes-front-walk-",
+    key: "aristotle-front-walk",
+    frames: anims.generateFrameNames("aristotle", {
+      prefix: "aristotle-front-walk-",
       end: 9,
       zeroPad: 4,
     }),
@@ -221,9 +222,93 @@ function create() {
     repeat: -1,
   });
   anims.create({
-    key: "descartes-back-walk",
-    frames: anims.generateFrameNames("descartes", {
-      prefix: "descartes-back-walk-",
+    key: "aristotle-back-walk",
+    frames: anims.generateFrameNames("aristotle", {
+      prefix: "aristotle-back-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+
+  // Create animations for Socrates
+  anims.create({
+    key: "socrates-left-walk",
+    frames: anims.generateFrameNames("socrates", {
+      prefix: "socrates-left-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+  anims.create({
+    key: "socrates-right-walk",
+    frames: anims.generateFrameNames("socrates", {
+      prefix: "socrates-right-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+  anims.create({
+    key: "socrates-front-walk",
+    frames: anims.generateFrameNames("socrates", {
+      prefix: "socrates-front-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+  anims.create({
+    key: "socrates-back-walk",
+    frames: anims.generateFrameNames("socrates", {
+      prefix: "socrates-back-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+
+  // Create animations for Plato
+  anims.create({
+    key: "plato-left-walk",
+    frames: anims.generateFrameNames("plato", {
+      prefix: "plato-left-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+  anims.create({
+    key: "plato-right-walk",
+    frames: anims.generateFrameNames("plato", {
+      prefix: "plato-right-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+  anims.create({
+    key: "plato-front-walk",
+    frames: anims.generateFrameNames("plato", {
+      prefix: "plato-front-walk-",
+      end: 9,
+      zeroPad: 4,
+    }),
+    frameRate: 10,
+    repeat: -1,
+  });
+  anims.create({
+    key: "plato-back-walk",
+    frames: anims.generateFrameNames("plato", {
+      prefix: "plato-back-walk-",
       end: 9,
       zeroPad: 4,
     }),
@@ -249,18 +334,18 @@ function create() {
   //   .setDepth(30);
 
   // Debug graphics
-  this.input.keyboard.once("keydown-D", (event) => {
-    // Turn on physics debugging to show player's hitbox
-    this.physics.world.createDebugGraphic();
+  // this.input.keyboard.once("keydown-D", (event) => {
+  //   // Turn on physics debugging to show player's hitbox
+  //   this.physics.world.createDebugGraphic();
 
-    // Create worldLayer collision graphic above the player, but below the help text
-    const graphics = this.add.graphics().setAlpha(0.75).setDepth(20);
-    worldLayer.renderDebug(graphics, {
-      tileColor: null, // Color of non-colliding tiles
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Color of colliding face edges
-    });
-  });
+  //   // Create worldLayer collision graphic above the player, but below the help text
+  //   const graphics = this.add.graphics().setAlpha(0.75).setDepth(20);
+  //   worldLayer.renderDebug(graphics, {
+  //     tileColor: null, // Color of non-colliding tiles
+  //     collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
+  //     faceColor: new Phaser.Display.Color(40, 39, 37, 255), // Color of colliding face edges
+  //   });
+  // });
 
   // Calculate maximum height that won't exceed screen
   const maxDialogueHeight = 200; // This will show about 5-6 lines
@@ -287,7 +372,7 @@ function create() {
     .setVisible(false);
 
   this.input.keyboard.on('keydown-SPACE', () => {
-    if (isNearPlayer2 && !isTyping) {  // Only open dialogue if not already typing
+    if (isNearPlayer2 && !isTyping) {
         // Open dialogue to start typing
         dialogueBox.setVisible(true);
         dialogueText.setVisible(true);
@@ -295,22 +380,7 @@ function create() {
         currentMessage = '';
         dialogueText.setText('Type your message: ');
         dialogueText.setColor('#00ff00');
-        isInDialogue = true;  // This will make NPC stop and face player
-        
-        // Make NPC face the player immediately when starting dialogue
-        if (player.x < player2.x) {
-          player2.setTexture("atlas", "miguel-left");
-        } else if (player.x > player2.x) {
-          player2.setTexture("atlas", "miguel-right");
-        } else if (player.y < player2.y) {
-          player2.setTexture("atlas", "miguel-back");
-        } else {
-          player2.setTexture("atlas", "miguel-front");
-        }
-        
-        // Stop any ongoing NPC movement
-        npcIsMoving = false;
-        player2.anims.stop();
+        isInDialogue = true;
     }
   });
 
@@ -353,21 +423,6 @@ function create() {
       dialogueText.setColor('#00ff00');
     }
   });
-}
-
-function startNPCMovement() {
-  npcIsMoving = !npcIsMoving;
-  
-  if (npcIsMoving) {
-    // Change NPC direction based on current position
-    if (player2.x === npcStartPosition.x) {
-      npcDirection = 1;
-      player2.setTexture("descartes", "descartes-right");
-    } else if (player2.x === npcEndPosition.x) {
-      npcDirection = -1;
-      player2.setTexture("descartes", "descartes-left");
-    }
-  }
 }
 
 function update(time, delta) {
@@ -414,79 +469,37 @@ function update(time, delta) {
     else if (prevVelocity.y > 0) player.setTexture("atlas", "miguel-front");
   }
 
-  // Handle NPC movement
-  if (npcIsMoving) {
-    const targetX = npcDirection === 1 ? npcEndPosition.x : npcStartPosition.x;
-    const distance = Math.abs(player2.x - targetX);
-
-    if (distance > 1) {
-      // Move NPC
-      player2.x += NPC_SPEED * npcDirection * (delta / 1000);
-      
-      // Play walking animation
-      if (npcDirection === 1) {
-        player2.anims.play("descartes-right-walk", true);
-      } else {
-        player2.anims.play("descartes-left-walk", true);
-      }
-    } else {
-      // Snap to exact position when close enough
-      player2.x = targetX;
-      player2.anims.stop();
-      npcIsMoving = false;
-    }
-  } else {
-    // Stop animation when not moving
-    player2.anims.stop();
-  }
-
-  // Check if player is near player2 and update dialogue availability
-  const distance = Phaser.Math.Distance.Between(
+  // Update the distance check to handle all philosophers
+  const distanceToAristotle = Phaser.Math.Distance.Between(
     player.x, player.y,
     player2.x, player2.y
   );
-  isNearPlayer2 = distance < 100;
+  const distanceToSocrates = Phaser.Math.Distance.Between(
+    player.x, player.y,
+    player3.x, player3.y
+  );
+  const distanceToPlato = Phaser.Math.Distance.Between(
+    player.x, player.y,
+    player4.x, player4.y
+  );
+
+  // Check which philosopher (if any) the player is near
+  if (distanceToAristotle < 100) {
+    isNearPlayer2 = true;
+    currentPhilosopher = 'aristotle';
+  } else if (distanceToSocrates < 100) {
+    isNearPlayer2 = true;
+    currentPhilosopher = 'socrates';
+  } else if (distanceToPlato < 100) {
+    isNearPlayer2 = true;
+    currentPhilosopher = 'plato';
+  } else {
+    isNearPlayer2 = false;
+    currentPhilosopher = null;
+  }
 
   if (isInDialogue) {
-    // Stop NPC movement and face the player during dialogue
-    npcIsMoving = false;
     player2.anims.stop();
-    
-    // Continuously update NPC facing direction to follow player
-    if (player.x < player2.x) {
-      player2.setTexture("descartes", "descartes-left");
-    } else if (player.x > player2.x) {
-      player2.setTexture("descartes", "descartes-right");
-    } else if (player.y < player2.y) {
-      player2.setTexture("descartes", "descartes-back");
-    } else {
-      player2.setTexture("descartes", "descartes-front");
-    }
-  } else {
-    // Resume normal patrol behavior when not in dialogue
-    if (!isNearPlayer2) {
-      if (npcIsMoving) {
-        const targetX = npcDirection === 1 ? npcEndPosition.x : npcStartPosition.x;
-        const distance = Math.abs(player2.x - targetX);
-
-        if (distance > 1) {
-          // Move NPC
-          player2.x += NPC_SPEED * npcDirection * (delta / 1000);
-          
-          // Play walking animation
-          if (npcDirection === 1) {
-            player2.anims.play("descartes-right-walk", true);
-          } else {
-            player2.anims.play("descartes-left-walk", true);
-          }
-        } else {
-          // Snap to exact position when close enough
-          player2.x = targetX;
-          player2.anims.stop();
-          npcIsMoving = false;
-        }
-      }
-    }
   }
 
   // Disable player movement while typing
