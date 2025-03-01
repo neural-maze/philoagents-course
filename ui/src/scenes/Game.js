@@ -61,7 +61,7 @@ export class Game extends Scene
             { id: "plato", name: "Plato", defaultDirection: "front" },
             { id: "descartes", name: "Descartes", defaultDirection: "front" },
             { id: "leibniz", name: "Leibniz", defaultDirection: "front" },
-            { id: "ada", name: "Ada", defaultDirection: "front" },
+            { id: "ada_lovelace", name: "Ada Lovelace", defaultDirection: "front" },
             { id: "turing", name: "Turing", defaultDirection: "front" },
             { id: "searle", name: "Searle", defaultDirection: "front" },
             { id: "chomsky", name: "Chomsky", defaultDirection: "front" },
@@ -98,7 +98,7 @@ export class Game extends Scene
     checkPhilosopherInteraction() {
         const philosophers = [
             this.socrates, this.aristotle, this.plato, 
-            this.descartes, this.leibniz, this.ada, 
+            this.descartes, this.leibniz, this.ada_lovelace, 
             this.turing, this.searle, this.chomsky,
              this.dennett, this.miguel, this.paul];
 
@@ -165,7 +165,7 @@ export class Game extends Scene
         
         const philosophers = [
             this.socrates, this.aristotle, this.plato, 
-            this.descartes, this.leibniz, this.ada, 
+            this.descartes, this.leibniz, this.ada_lovelace, 
             this.turing, this.searle, this.chomsky,
             this.dennett, this.miguel, this.paul
         ];
