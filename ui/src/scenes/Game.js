@@ -16,6 +16,7 @@ export class Game extends Scene
         this.activePhilosopher = null;
         this.dialogueManager = null;
         this.philosophers = [];
+        this.labelsVisible = true;
     }
 
     create ()
@@ -99,6 +100,9 @@ export class Game extends Scene
             
             this.philosophers.push(this[config.id]);
         });
+
+        // Make all philosopher labels visible initially
+        this.togglePhilosopherLabels(true);
     }
 
     checkPhilosopherInteraction() {
@@ -200,6 +204,16 @@ export class Game extends Scene
             down: this.cursors.down,
             speed: 0.5,
         });
+
+        // Add key to toggle name labels
+        this.labelKey = this.input.keyboard.addKey('L');
+        this.input.keyboard.on('keydown-L', () => {
+            this.labelsVisible = !this.labelsVisible;
+            this.togglePhilosopherLabels(this.labelsVisible);
+        });
+        
+        // Initialize label visibility state
+        this.labelsVisible = true;
     }
 
     setupDialogueSystem() {
@@ -227,7 +241,7 @@ export class Game extends Scene
     }
 
     addHelpText() {
-        this.add.text(16, 16, 'Arrow keys to move\nPress SPACE near philosophers to talk', {
+        this.add.text(16, 16, 'Arrow keys to move\nPress SPACE near philosophers to talk\nPress L to toggle name labels', {
             font: "18px monospace",
             fill: "#000000",
             padding: { x: 20, y: 10 },
@@ -287,5 +301,13 @@ export class Game extends Scene
             else if (prevVelocity.y < 0) this.player.setTexture("sophia", "misa-back");
             else if (prevVelocity.y > 0) this.player.setTexture("sophia", "misa-front");
         }
+    }
+
+    togglePhilosopherLabels(visible) {
+        this.philosophers.forEach(philosopher => {
+            if (philosopher.nameLabel) {
+                philosopher.nameLabel.setVisible(visible);
+            }
+        });
     }
 }

@@ -107,12 +107,16 @@ export class MainMenu extends Scene {
         const elements = this.createInstructionPanel(centerX, centerY);
         
         // Add instruction content
-        this.addInstructionContent(centerX, centerY, elements.panel);
+        const instructionContent = this.addInstructionContent(centerX, centerY, elements.panel);
+        elements.title = instructionContent.title;
+        elements.textElements = instructionContent.textElements;
         
         // Add close button
-        this.addCloseButton(centerX, centerY + 100, () => {
+        const closeElements = this.addCloseButton(centerX, centerY + 100, () => {
             this.destroyInstructionElements(elements);
         });
+        elements.closeButton = closeElements.button;
+        elements.closeText = closeElements.text;
         
         // Close on overlay click
         elements.overlay.on('pointerdown', () => {
@@ -153,11 +157,12 @@ export class MainMenu extends Scene {
         const instructions = [
             'Arrow keys for moving',
             'SPACE for talking to philosophers',
-            'ESC for closing the dialogue'
+            'ESC for closing the dialogue',
+            'L for toggling philosopher name labels'
         ];
         
         const textElements = [];
-        let yPos = centerY - 60;
+        let yPos = centerY - 70;
         instructions.forEach(instruction => {
             textElements.push(
                 this.add.text(centerX, yPos, instruction, {
@@ -173,17 +178,20 @@ export class MainMenu extends Scene {
     }
     
     addCloseButton(x, y, callback) {
+        // Move the button higher up instead of lower
+        const adjustedY = y + 10; // Changed from +30 to -30 to move button up
+        
         const buttonWidth = 120;
         const buttonHeight = 40;
         const cornerRadius = 10;
         
         const closeButton = this.add.graphics();
         closeButton.fillStyle(0x87CEEB, 1);
-        closeButton.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
+        closeButton.fillRoundedRect(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         closeButton.lineStyle(2, 0x000000, 1);
-        closeButton.strokeRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
+        closeButton.strokeRoundedRect(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         
-        const closeText = this.add.text(x, y, 'Close', {
+        const closeText = this.add.text(x, adjustedY, 'Close', {
             fontSize: '20px',
             fontFamily: 'Arial',
             color: '#000000',
@@ -192,24 +200,24 @@ export class MainMenu extends Scene {
         
         // Make close button interactive
         closeButton.setInteractive(
-            new Phaser.Geom.Rectangle(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight),
+            new Phaser.Geom.Rectangle(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight),
             Phaser.Geom.Rectangle.Contains
         );
         
         closeButton.on('pointerover', () => {
             closeButton.clear();
             closeButton.fillStyle(0x5CACEE, 1);
-            closeButton.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
+            closeButton.fillRoundedRect(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
             closeButton.lineStyle(2, 0x000000, 1);
-            closeButton.strokeRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
+            closeButton.strokeRoundedRect(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         });
         
         closeButton.on('pointerout', () => {
             closeButton.clear();
             closeButton.fillStyle(0x87CEEB, 1);
-            closeButton.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
+            closeButton.fillRoundedRect(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
             closeButton.lineStyle(2, 0x000000, 1);
-            closeButton.strokeRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
+            closeButton.strokeRoundedRect(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         });
         
         closeButton.on('pointerdown', callback);
@@ -221,22 +229,13 @@ export class MainMenu extends Scene {
         // Clean up all created elements
         elements.overlay.destroy();
         elements.panel.destroy();
+        elements.title.destroy();
         
-        // Remove all text elements related to instructions
-        this.children.list
-            .filter(child => child.type === 'Text' && 
-                  (child.text === 'INSTRUCTIONS' || 
-                   child.text === 'Arrow keys for moving' ||
-                   child.text === 'SPACE for talking to philosophers' ||
-                   child.text === 'ESC for closing the dialogue' ||
-                   child.text === 'Close'))
-            .forEach(text => text.destroy());
-            
-        // Find and destroy the close button
-        this.children.list
-            .filter(child => child.type === 'Graphics' && 
-                   child !== elements.overlay && 
-                   child !== elements.panel)
-            .forEach(graphic => graphic.destroy());
+        // Destroy all instruction text elements
+        elements.textElements.forEach(text => text.destroy());
+        
+        // Destroy close button elements
+        elements.closeButton.destroy();
+        elements.closeText.destroy();
     }
 }

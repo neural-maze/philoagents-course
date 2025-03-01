@@ -17,6 +17,7 @@ class Character {
     this.scene.physics.add.collider(this.sprite, config.worldLayer);
     
     this.createAnimations();
+    this.createNameLabel();
   }
   
   // Animation methods
@@ -73,6 +74,8 @@ class Character {
       this.facePlayer(player);
       this.sprite.anims.stop();
     }
+    
+    this.updateNameLabelPosition();
   }
 
   // Property getters
@@ -85,6 +88,28 @@ class Character {
   
   get body() {
     return this.sprite;
+  }
+
+  createNameLabel() {
+    this.nameLabel = this.scene.add.text(0, 0, this.name, {
+      font: "14px Arial",
+      fill: "#ffffff",
+      backgroundColor: "#000000",
+      padding: { x: 4, y: 2 },
+      align: "center"
+    });
+    this.nameLabel.setOrigin(0.5, 1);
+    this.nameLabel.setDepth(20);
+    this.updateNameLabelPosition();
+  }
+
+  updateNameLabelPosition() {
+    if (this.nameLabel && this.sprite) {
+      this.nameLabel.setPosition(
+        this.sprite.x,
+        this.sprite.y - this.sprite.height/2 - 10
+      );
+    }
   }
 }
 
