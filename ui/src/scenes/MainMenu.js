@@ -10,41 +10,139 @@ export class MainMenu extends Scene {
         this.add.image(510, 260, 'logo').setScale(0.55);
 
         const centerX = this.cameras.main.width / 2;
-        const imageBottomY = 574;
+        const startY = 524; // Base position for first button
+        const buttonSpacing = 70; // Space between buttons
 
-        // Buttons
-        this.createButton(centerX, imageBottomY - 50, 'Let\'s Play!', () => {
+        // Main menu buttons
+        this.createButton(centerX, startY, 'Let\'s Play!', () => {
             this.scene.start('Game');
         });
 
-        this.createButton(centerX, imageBottomY + 20, 'Instructions', () => {
+        this.createButton(centerX, startY + buttonSpacing, 'Instructions', () => {
             this.showInstructions();
         });
 
-        this.createButton(centerX, imageBottomY + 90, 'Support Philoagents', () => {
+        this.createButton(centerX, startY + buttonSpacing * 2, 'Support Philoagents', () => {
             window.open('https://github.com/neural-maze/philoagents', '_blank');
         });
+    }
 
-        // TODO: Maybe add here a button for restarting, that basically cleans all the Database?
+    createButton(x, y, text, callback) {
+        const buttonWidth = 350;
+        const buttonHeight = 60;
+        const cornerRadius = 20;
+        const maxFontSize = 28;
+        const padding = 10;
+
+        // Create shadow
+        const shadow = this.add.graphics();
+        shadow.fillStyle(0x666666, 1);
+        shadow.fillRoundedRect(x - buttonWidth / 2 + 4, y - buttonHeight / 2 + 4, buttonWidth, buttonHeight, cornerRadius);
+
+        // Create button
+        const button = this.add.graphics();
+        button.fillStyle(0xffffff, 1);
+        button.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
+        button.setInteractive(
+            new Phaser.Geom.Rectangle(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight),
+            Phaser.Geom.Rectangle.Contains
+        );
+
+        // Create text with appropriate size
+        let fontSize = maxFontSize;
+        let buttonText;
+        do {
+            if (buttonText) buttonText.destroy();
+            
+            buttonText = this.add.text(x, y, text, {
+                fontSize: `${fontSize}px`,
+                fontFamily: 'Arial',
+                color: '#000000',
+                fontStyle: 'bold'
+            }).setOrigin(0.5);
+
+            fontSize -= 1;
+        } while (buttonText.width > buttonWidth - padding && fontSize > 10);
+
+        // Button hover effects
+        button.on('pointerover', () => {
+            this.updateButtonStyle(button, shadow, x, y, buttonWidth, buttonHeight, cornerRadius, true);
+            buttonText.y -= 2;
+        });
+
+        button.on('pointerout', () => {
+            this.updateButtonStyle(button, shadow, x, y, buttonWidth, buttonHeight, cornerRadius, false);
+            buttonText.y += 2;
+        });
+
+        button.on('pointerdown', callback);
         
+        return { button, shadow, text: buttonText };
+    }
+
+    updateButtonStyle(button, shadow, x, y, width, height, radius, isHover) {
+        button.clear();
+        shadow.clear();
+        
+        if (isHover) {
+            button.fillStyle(0x87CEEB, 1);
+            shadow.fillStyle(0x888888, 1);
+            shadow.fillRoundedRect(x - width / 2 + 2, y - height / 2 + 2, width, height, radius);
+        } else {
+            button.fillStyle(0xffffff, 1);
+            shadow.fillStyle(0x666666, 1);
+            shadow.fillRoundedRect(x - width / 2 + 4, y - height / 2 + 4, width, height, radius);
+        }
+        
+        button.fillRoundedRect(x - width / 2, y - height / 2, width, height, radius);
     }
 
     showInstructions() {
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        
+        // Create overlay and panel
+        const elements = this.createInstructionPanel(centerX, centerY);
+        
+        // Add instruction content
+        this.addInstructionContent(centerX, centerY, elements.panel);
+        
+        // Add close button
+        this.addCloseButton(centerX, centerY + 100, () => {
+            this.destroyInstructionElements(elements);
+        });
+        
+        // Close on overlay click
+        elements.overlay.on('pointerdown', () => {
+            this.destroyInstructionElements(elements);
+        });
+    }
+    
+    createInstructionPanel(centerX, centerY) {
         // Create a semi-transparent background
         const overlay = this.add.graphics();
         overlay.fillStyle(0x000000, 0.7);
         overlay.fillRect(0, 0, this.cameras.main.width, this.cameras.main.height);
-        overlay.setInteractive(new Phaser.Geom.Rectangle(0, 0, this.cameras.main.width, this.cameras.main.height), Phaser.Geom.Rectangle.Contains);
+        overlay.setInteractive(
+            new Phaser.Geom.Rectangle(0, 0, this.cameras.main.width, this.cameras.main.height),
+            Phaser.Geom.Rectangle.Contains
+        );
         
         // Create a panel for the instructions
         const panel = this.add.graphics();
         panel.fillStyle(0xffffff, 1);
-        panel.fillRoundedRect(this.cameras.main.width / 2 - 200, this.cameras.main.height / 2 - 150, 400, 300, 20);
+        panel.fillRoundedRect(centerX - 200, centerY - 150, 400, 300, 20);
         panel.lineStyle(4, 0x000000, 1);
-        panel.strokeRoundedRect(this.cameras.main.width / 2 - 200, this.cameras.main.height / 2 - 150, 400, 300, 20);
+        panel.strokeRoundedRect(centerX - 200, centerY - 150, 400, 300, 20);
         
+        return { overlay, panel };
+    }
+    
+    addInstructionContent(centerX, centerY, panel) {
         // Add title
-        this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2 - 120, 'INSTRUCTIONS', {
+        const title = this.add.text(centerX, centerY - 120, 'INSTRUCTIONS', {
             fontSize: '28px',
             fontFamily: 'Arial',
             color: '#000000',
@@ -58,24 +156,34 @@ export class MainMenu extends Scene {
             'ESC for closing the dialogue'
         ];
         
-        let yPos = this.cameras.main.height / 2 - 60;
+        const textElements = [];
+        let yPos = centerY - 60;
         instructions.forEach(instruction => {
-            this.add.text(this.cameras.main.width / 2, yPos, instruction, {
-                fontSize: '22px',
-                fontFamily: 'Arial',
-                color: '#000000'
-            }).setOrigin(0.5);
+            textElements.push(
+                this.add.text(centerX, yPos, instruction, {
+                    fontSize: '22px',
+                    fontFamily: 'Arial',
+                    color: '#000000'
+                }).setOrigin(0.5)
+            );
             yPos += 40;
         });
         
-        // Add close button
+        return { title, textElements };
+    }
+    
+    addCloseButton(x, y, callback) {
+        const buttonWidth = 120;
+        const buttonHeight = 40;
+        const cornerRadius = 10;
+        
         const closeButton = this.add.graphics();
         closeButton.fillStyle(0x87CEEB, 1);
-        closeButton.fillRoundedRect(this.cameras.main.width / 2 - 60, this.cameras.main.height / 2 + 80, 120, 40, 10);
+        closeButton.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         closeButton.lineStyle(2, 0x000000, 1);
-        closeButton.strokeRoundedRect(this.cameras.main.width / 2 - 60, this.cameras.main.height / 2 + 80, 120, 40, 10);
+        closeButton.strokeRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         
-        const closeText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2 + 100, 'Close', {
+        const closeText = this.add.text(x, y, 'Close', {
             fontSize: '20px',
             fontFamily: 'Arial',
             color: '#000000',
@@ -83,98 +191,52 @@ export class MainMenu extends Scene {
         }).setOrigin(0.5);
         
         // Make close button interactive
-        closeButton.setInteractive(new Phaser.Geom.Rectangle(this.cameras.main.width / 2 - 60, this.cameras.main.height / 2 + 80, 120, 40), Phaser.Geom.Rectangle.Contains);
+        closeButton.setInteractive(
+            new Phaser.Geom.Rectangle(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight),
+            Phaser.Geom.Rectangle.Contains
+        );
         
         closeButton.on('pointerover', () => {
             closeButton.clear();
             closeButton.fillStyle(0x5CACEE, 1);
-            closeButton.fillRoundedRect(this.cameras.main.width / 2 - 60, this.cameras.main.height / 2 + 80, 120, 40, 10);
+            closeButton.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
             closeButton.lineStyle(2, 0x000000, 1);
-            closeButton.strokeRoundedRect(this.cameras.main.width / 2 - 60, this.cameras.main.height / 2 + 80, 120, 40, 10);
+            closeButton.strokeRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         });
         
         closeButton.on('pointerout', () => {
             closeButton.clear();
             closeButton.fillStyle(0x87CEEB, 1);
-            closeButton.fillRoundedRect(this.cameras.main.width / 2 - 60, this.cameras.main.height / 2 + 80, 120, 40, 10);
+            closeButton.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
             closeButton.lineStyle(2, 0x000000, 1);
-            closeButton.strokeRoundedRect(this.cameras.main.width / 2 - 60, this.cameras.main.height / 2 + 80, 120, 40, 10);
+            closeButton.strokeRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         });
         
-        const closeInstructions = () => {
-            overlay.destroy();
-            panel.destroy();
-            closeButton.destroy();
-            closeText.destroy();
-            
-            // Remove all text elements
-            this.children.list
-                .filter(child => child.type === 'Text' && 
-                       (child.text === 'INSTRUCTIONS' || 
-                        instructions.includes(child.text) || 
-                        child.text === 'Close'))
-                .forEach(text => text.destroy());
-        };
+        closeButton.on('pointerdown', callback);
         
-        closeButton.on('pointerdown', closeInstructions);
-        overlay.on('pointerdown', closeInstructions);
+        return { button: closeButton, text: closeText };
     }
-
-    createButton(x, y, text, callback) {
-        const buttonWidth = 350;
-        const buttonHeight = 60;
-        const cornerRadius = 20;
-
-        const shadow = this.add.graphics();
-        shadow.fillStyle(0x666666, 1);
-        shadow.fillRoundedRect(x - buttonWidth / 2 + 4, y - buttonHeight / 2 + 4, buttonWidth, buttonHeight, cornerRadius);
-
-        const button = this.add.graphics();
-        button.fillStyle(0xffffff, 1);
-        button.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
-        button.setInteractive(new Phaser.Geom.Rectangle(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight), Phaser.Geom.Rectangle.Contains);
-
-        const maxFontSize = 28;
-        const padding = 10;
-        let fontSize = maxFontSize;
-        let buttonText;
-
-        do {
-            buttonText = this.add.text(x, y, text, {
-                fontSize: `${fontSize}px`,
-                fontFamily: 'Arial',
-                color: '#000000',
-                fontStyle: 'bold'
-            }).setOrigin(0.5);
-
-            if (buttonText.width > buttonWidth - padding) {
-                buttonText.destroy();
-                fontSize -= 1;
-            }
-        } while (buttonText.width > buttonWidth - padding);
-
-        button.on('pointerover', () => {
-            button.clear();
-            button.fillStyle(0x87CEEB, 1);
-            button.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
-            shadow.clear();
-            shadow.fillStyle(0x888888, 1);
-            shadow.fillRoundedRect(x - buttonWidth / 2 + 2, y - buttonHeight / 2 + 2, buttonWidth, buttonHeight, cornerRadius);
-            buttonText.y -= 2;
-        });
-
-        button.on('pointerout', () => {
-            button.clear();
-            button.fillStyle(0xffffff, 1);
-            button.fillRoundedRect(x - buttonWidth / 2, y - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
-            shadow.clear();
-            shadow.fillStyle(0x666666, 1);
-            shadow.fillRoundedRect(x - buttonWidth / 2 + 4, y - buttonHeight / 2 + 4, buttonWidth, buttonHeight, cornerRadius);
-            buttonText.y += 2;
-        });
-
-        button.on('pointerdown', () => {
-            callback();
-        });
+    
+    destroyInstructionElements(elements) {
+        // Clean up all created elements
+        elements.overlay.destroy();
+        elements.panel.destroy();
+        
+        // Remove all text elements related to instructions
+        this.children.list
+            .filter(child => child.type === 'Text' && 
+                  (child.text === 'INSTRUCTIONS' || 
+                   child.text === 'Arrow keys for moving' ||
+                   child.text === 'SPACE for talking to philosophers' ||
+                   child.text === 'ESC for closing the dialogue' ||
+                   child.text === 'Close'))
+            .forEach(text => text.destroy());
+            
+        // Find and destroy the close button
+        this.children.list
+            .filter(child => child.type === 'Graphics' && 
+                   child !== elements.overlay && 
+                   child !== elements.panel)
+            .forEach(graphic => graphic.destroy());
     }
 }

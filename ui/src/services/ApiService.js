@@ -3,25 +3,33 @@ class ApiService {
     this.apiUrl = 'http://localhost:8000';
   }
 
+  async request(endpoint, method, data) {
+    const url = `${this.apiUrl}${endpoint}`;
+    const options = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    };
+
+    const response = await fetch(url, options);
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} ${response.statusText}`);
+    }
+    
+    return response.json();
+  }
+
   async sendMessage(philosopher, message) {
     try {
-      const response = await fetch(`${this.apiUrl}/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: message,
-          philosopher_id: philosopher.id
-        }),
+      const data = await this.request('/chat', 'POST', {
+        message,
+        philosopher_id: philosopher.id
       });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      return data.response
+      
+      return data.response;
     } catch (error) {
       console.error('Error sending message to API:', error);
       return this.getFallbackResponse(philosopher);
@@ -29,7 +37,7 @@ class ApiService {
   }
 
   getFallbackResponse(philosopher) {
-    return "I'm so tired right now, I can't talk. I'm going to sleep now.";
+    return `I'm sorry, ${philosopher.name || 'the philosopher'} is unavailable at the moment. Please try again later.`;
   }
 }
 

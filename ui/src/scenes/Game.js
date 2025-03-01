@@ -15,6 +15,7 @@ export class Game extends Scene
         this.spaceKey = null;
         this.activePhilosopher = null;
         this.dialogueManager = null;
+        this.philosophers = [];
     }
 
     create ()
@@ -31,6 +32,8 @@ export class Game extends Scene
         const camera = this.setupCamera(map);
 
         this.setupControls(camera);
+
+        this.setupDialogueSystem();
 
         this.dialogueBox = new DialogueBox(this);
         this.dialogueText = this.add
@@ -54,7 +57,6 @@ export class Game extends Scene
     }
 
     createPhilosophers(map, layers) {
-
         const philosopherConfigs = [
             { id: "socrates", name: "Socrates", defaultDirection: "right"},
             { id: "aristotle", name: "Aristotle", defaultDirection: "right" },
@@ -80,6 +82,8 @@ export class Game extends Scene
             }
         ];
 
+        this.philosophers = [];
+        
         philosopherConfigs.forEach(config => {
             const spawnPoint = map.findObject("Objects", (obj) => obj.name === config.name);
             
@@ -92,19 +96,15 @@ export class Game extends Scene
                 worldLayer: layers.worldLayer,
                 defaultMessage: config.defaultMessage
             });
+            
+            this.philosophers.push(this[config.id]);
         });
     }
 
     checkPhilosopherInteraction() {
-        const philosophers = [
-            this.socrates, this.aristotle, this.plato, 
-            this.descartes, this.leibniz, this.ada_lovelace, 
-            this.turing, this.searle, this.chomsky,
-             this.dennett, this.miguel, this.paul];
-
         let nearbyPhilosopher = null;
 
-        for (const philosopher of philosophers) {
+        for (const philosopher of this.philosophers) {
             if (philosopher.isPlayerNearby(this.player)) {
                 nearbyPhilosopher = philosopher;
                 break;
@@ -114,23 +114,17 @@ export class Game extends Scene
         if (nearbyPhilosopher) {
             if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
                 if (!this.dialogueBox.isVisible()) {
-                    // Start a new dialogue
                     this.dialogueManager.startDialogue(nearbyPhilosopher);
                 } else if (!this.dialogueManager.isTyping) {
-                    // Continue the dialogue if we're not already typing
                     this.dialogueManager.continueDialogue();
                 }
             }
             
-            // Update philosopher facing the player when in dialogue
             if (this.dialogueBox.isVisible()) {
                 nearbyPhilosopher.facePlayer(this.player);
             }
-        } else {
-            // No philosopher nearby, close dialogue if open
-            if (this.dialogueBox.isVisible()) {
-                this.dialogueManager.closeDialogue();
-            }
+        } else if (this.dialogueBox.isVisible()) {
+            this.dialogueManager.closeDialogue();
         }
     }
 
@@ -163,14 +157,7 @@ export class Game extends Scene
 
         this.physics.add.collider(this.player, worldLayer);
         
-        const philosophers = [
-            this.socrates, this.aristotle, this.plato, 
-            this.descartes, this.leibniz, this.ada_lovelace, 
-            this.turing, this.searle, this.chomsky,
-            this.dennett, this.miguel, this.paul
-        ];
-        
-        philosophers.forEach(philosopher => {
+        this.philosophers.forEach(philosopher => {
             this.physics.add.collider(this.player, philosopher.sprite);
         });
 
@@ -179,29 +166,20 @@ export class Game extends Scene
 
     createPlayerAnimations() {
         const anims = this.anims;
-        anims.create({
-            key: "misa-left-walk",
-            frames: anims.generateFrameNames("sophia", { prefix: "misa-left-walk.", start: 0, end: 3, zeroPad: 3 }),
-            frameRate: 10,
-            repeat: -1,
-        });
-        anims.create({
-            key: "misa-right-walk",
-            frames: anims.generateFrameNames("sophia", { prefix: "misa-right-walk.", start: 0, end: 3, zeroPad: 3 }),
-            frameRate: 10,
-            repeat: -1,
-        });
-        anims.create({
-            key: "misa-front-walk",
-            frames: anims.generateFrameNames("sophia", { prefix: "misa-front-walk.", start: 0, end: 3, zeroPad: 3 }),
-            frameRate: 10,
-            repeat: -1,
-        });
-        anims.create({
-            key: "misa-back-walk",
-            frames: anims.generateFrameNames("sophia", { prefix: "misa-back-walk.", start: 0, end: 3, zeroPad: 3 }),
-            frameRate: 10,
-            repeat: -1,
+        const animConfig = [
+            { key: "misa-left-walk", prefix: "misa-left-walk." },
+            { key: "misa-right-walk", prefix: "misa-right-walk." },
+            { key: "misa-front-walk", prefix: "misa-front-walk." },
+            { key: "misa-back-walk", prefix: "misa-back-walk." }
+        ];
+        
+        animConfig.forEach(config => {
+            anims.create({
+                key: config.key,
+                frames: anims.generateFrameNames("sophia", { prefix: config.prefix, start: 0, end: 3, zeroPad: 3 }),
+                frameRate: 10,
+                repeat: -1,
+            });
         });
     }
 
@@ -224,6 +202,30 @@ export class Game extends Scene
         });
     }
 
+    setupDialogueSystem() {
+        const screenPadding = 20;
+        const maxDialogueHeight = 200;
+        
+        this.dialogueBox = new DialogueBox(this);
+        this.dialogueText = this.add
+            .text(60, this.game.config.height - maxDialogueHeight - screenPadding + screenPadding, '', {
+                font: "18px monospace",
+                fill: "#ffffff",
+                padding: { x: 20, y: 10 },
+                wordWrap: { width: 680 },
+                lineSpacing: 6,
+                maxLines: 5
+            })
+            .setScrollFactor(0)
+            .setDepth(30)
+            .setVisible(false);
+
+        this.spaceKey = this.input.keyboard.addKey('SPACE');
+        
+        this.dialogueManager = new DialogueManager(this);
+        this.dialogueManager.initialize(this.dialogueBox);
+    }
+
     addHelpText() {
         this.add.text(16, 16, 'Arrow keys to move\nPress SPACE near philosophers to talk', {
             font: "18px monospace",
@@ -234,18 +236,17 @@ export class Game extends Scene
     }
 
     update(time, delta) {
-        // Only allow movement if not in dialogue
-        if (!this.dialogueBox.isVisible()) {
+        const isInDialogue = this.dialogueBox.isVisible();
+        
+        if (!isInDialogue) {
             this.updatePlayerMovement();
         }
         
         this.checkPhilosopherInteraction();
         
-        // Update all philosophers
-        const isInDialogue = this.dialogueBox.isVisible();
-        this.socrates.update(this.player, isInDialogue);
-        this.aristotle.update(this.player, isInDialogue);
-        this.plato.update(this.player, isInDialogue);
+        this.philosophers.forEach(philosopher => {
+            philosopher.update(this.player, isInDialogue);
+        });
         
         if (this.controls) {
             this.controls.update(delta);

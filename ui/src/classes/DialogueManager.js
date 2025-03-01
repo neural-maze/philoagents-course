@@ -1,18 +1,30 @@
 import ApiService from '../services/ApiService';
+import WebSocketApiService from '../services/WebSocketApiService';
 
 class DialogueManager {
   constructor(scene) {
+    // Core properties
     this.scene = scene;
     this.dialogueBox = null;
     this.activePhilosopher = null;
+    
+    // State management
     this.isTyping = false;
+    this.isStreaming = false;
     this.currentMessage = '';
+    this.streamingText = '';
+    
+    // Cursor properties
     this.cursorBlinkEvent = null;
     this.cursorVisible = true;
+    
+    // Connection management
     this.hasSetupListeners = false;
-    this.isStreaming = false;
+    this.disconnectTimeout = null;
   }
 
+  // === Initialization ===
+  
   initialize(dialogueBox) {
     this.dialogueBox = dialogueBox;
     
@@ -23,116 +35,190 @@ class DialogueManager {
   }
 
   setupKeyboardListeners() {
-    let apiResponse = '';
     this.scene.input.keyboard.on('keydown', async (event) => {
       if (!this.isTyping) {
-        // If we're streaming text and space is pressed, skip the animation
         if (this.isStreaming && (event.key === 'Space' || event.key === ' ')) {
           this.skipStreaming();
-          return;
         }
         return;
       }
     
-      if (event.key === 'Enter') {
-        if (this.currentMessage.trim() !== '') {
-          this.dialogueBox.show('...', true);
-          
-          if (this.cursorBlinkEvent) {
-            this.cursorBlinkEvent.remove();
-            this.cursorBlinkEvent = null;
-          }
-          
-          if (this.activePhilosopher.defaultMessage) {
-            apiResponse = this.activePhilosopher.defaultMessage;
-          } else {
-            apiResponse = await ApiService.sendMessage(
-              this.activePhilosopher, 
-              this.currentMessage
-            );
-          }
-
-          // Show API response with streaming effect
-          this.dialogueBox.show('', true); // Clear the box first
-          await this.streamText(apiResponse);
-          
-          this.currentMessage = '';
-          this.isTyping = false;
-        } else if (this.dialogueBox.text !== '|') {
-          this.restartTypingPrompt();
-        }
-      } else if (event.key === 'Escape') {
-        this.closeDialogue();
-      } else if (event.key === 'Backspace') {
-        this.currentMessage = this.currentMessage.slice(0, -1);
-        this.updateDialogueText();
-      } else if (event.key.length === 1) { // Single character keys
-        this.currentMessage += event.key;
-        this.updateDialogueText();
-      }
+      this.handleKeyPress(event);
     });
   }
 
+  // === Input Handling ===
+  
+  async handleKeyPress(event) {
+    if (event.key === 'Enter') {
+      await this.handleEnterKey();
+    } else if (event.key === 'Escape') {
+      this.closeDialogue();
+    } else if (event.key === 'Backspace') {
+      this.currentMessage = this.currentMessage.slice(0, -1);
+      this.updateDialogueText();
+    } else if (event.key.length === 1) { // Single character keys
+      if (!this.isTyping) {
+        this.currentMessage = '';
+        this.isTyping = true;
+      }
+      
+      this.currentMessage += event.key;
+      this.updateDialogueText();
+    }
+  }
+
+  async handleEnterKey() {
+    if (this.currentMessage.trim() !== '') {
+      this.dialogueBox.show('...', true);
+      this.stopCursorBlink();
+      
+      if (this.activePhilosopher.defaultMessage) {
+        await this.handleDefaultMessage();
+      } else {
+        await this.handleWebSocketMessage();
+      }
+      
+      this.currentMessage = '';
+      this.isTyping = false;
+    } else if (!this.isTyping) {
+      this.restartTypingPrompt();
+    }
+  }
+
+  // === Message Processing ===
+  
+  async handleDefaultMessage() {
+    const apiResponse = this.activePhilosopher.defaultMessage;
+    this.dialogueBox.show('', true);
+    await this.streamText(apiResponse);
+  }
+
+  async handleWebSocketMessage() {
+    this.dialogueBox.show('', true);
+    this.isStreaming = true;
+    this.streamingText = '';
+    
+    try {
+      await this.processWebSocketMessage();
+    } catch (error) {
+      console.error('WebSocket error:', error);
+      await this.fallbackToRegularApi();
+    } finally {
+      this.isTyping = false;
+    }
+  }
+
+  async processWebSocketMessage() {
+    await WebSocketApiService.connect();
+    
+    const callbacks = {
+      onMessage: () => { 
+        this.finishStreaming();
+      },
+      onChunk: (chunk) => {
+        this.streamingText += chunk;
+        this.dialogueBox.show(this.streamingText, true);
+      },
+      onStreamingStart: () => {
+        this.isStreaming = true;
+      },
+      onStreamingEnd: () => {
+        this.finishStreaming();
+      }
+    };
+    
+    await WebSocketApiService.sendMessage(
+      this.activePhilosopher,
+      this.currentMessage,
+      callbacks
+    );
+    
+    while (this.isStreaming) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    this.currentMessage = '';
+    WebSocketApiService.disconnect();
+  }
+
+  finishStreaming() {
+    this.isStreaming = false;
+    this.dialogueBox.show(this.streamingText, true);
+  }
+
+  async fallbackToRegularApi() {
+    const apiResponse = await ApiService.sendMessage(
+      this.activePhilosopher, 
+      this.currentMessage
+    );
+    await this.streamText(apiResponse);
+  }
+
+  // === UI Management ===
+  
   updateDialogueText() {
-    this.dialogueBox.show(this.currentMessage + 
-      (this.cursorVisible ? '|' : ''));
+    const displayText = this.currentMessage + (this.cursorVisible ? '|' : '');
+    this.dialogueBox.show(displayText, true);
   }
 
   restartTypingPrompt() {
+    this.currentMessage = '';
     this.dialogueBox.show('|', true);
     
-    // Restart cursor blinking
-    if (this.cursorBlinkEvent) {
-      this.cursorBlinkEvent.remove();
-    }
-    
+    this.stopCursorBlink();
     this.cursorVisible = true;
-    this.cursorBlinkEvent = this.scene.time.addEvent({
-      delay: 530,
-      callback: () => {
-        if (this.dialogueBox.isVisible() && this.isTyping) {
-          this.cursorVisible = !this.cursorVisible;
-          this.dialogueBox.show(this.currentMessage + (this.cursorVisible ? '|' : ''));
-        }
-      },
-      loop: true
-    });
+    this.startCursorBlink();
+    
+    this.updateDialogueText();
   }
 
-  startDialogue(philosopher) {
-    this.activePhilosopher = philosopher;
-    this.isTyping = true;
-    this.currentMessage = '';
-    
-    this.dialogueBox.show('|', true);
-
-    if (this.cursorBlinkEvent) {
-      this.cursorBlinkEvent.remove();
-    }
-    
-    this.cursorVisible = true;
+  // === Cursor Management ===
+  
+  startCursorBlink() {
     this.cursorBlinkEvent = this.scene.time.addEvent({
       delay: 300,  
       callback: () => {
         if (this.dialogueBox.isVisible() && this.isTyping) {
           this.cursorVisible = !this.cursorVisible;
-          this.dialogueBox.show('' + 
-            this.currentMessage + (this.cursorVisible ? '|' : ''));
+          this.updateDialogueText();
         }
       },
       loop: true
     });
+  }
+
+  stopCursorBlink() {
+    if (this.cursorBlinkEvent) {
+      this.cursorBlinkEvent.remove();
+      this.cursorBlinkEvent = null;
+    }
+  }
+
+  // === Dialogue Flow Control ===
+  
+  startDialogue(philosopher) {
+    this.cancelDisconnectTimeout();
+    
+    this.activePhilosopher = philosopher;
+    this.isTyping = true;
+    this.currentMessage = '';
+    
+    this.dialogueBox.show('|', true);
+    this.stopCursorBlink();
+    
+    this.cursorVisible = true;
+    this.startCursorBlink();
   }
 
   closeDialogue() {
     this.dialogueBox.hide();
     this.isTyping = false;
     this.currentMessage = '';
+    this.isStreaming = false;
     
-    if (this.cursorBlinkEvent) {
-      this.cursorBlinkEvent.remove();
-      this.cursorBlinkEvent = null;
-    }
+    this.stopCursorBlink();
+    this.scheduleDisconnect();
   }
 
   isInDialogue() {
@@ -140,42 +226,35 @@ class DialogueManager {
   }
 
   continueDialogue() {
-    if (this.dialogueBox.isVisible()) {
-      if (this.isStreaming) {
-        // Skip the streaming animation if it's in progress
-        this.skipStreaming();
-      } else if (!this.isTyping) {
-        // Start a new input prompt
-        this.isTyping = true;
-        this.currentMessage = '';
-        this.restartTypingPrompt();
-      }
+    if (!this.dialogueBox.isVisible()) return;
+    
+    if (this.isStreaming) {
+      this.skipStreaming();
+    } else if (!this.isTyping) {
+      this.isTyping = true;
+      this.currentMessage = '';
+      this.dialogueBox.show('', false);
+      this.restartTypingPrompt();
     }
   }
 
+  // === Text Streaming ===
+  
   async streamText(text, speed = 30) {
     this.isStreaming = true;
     let displayedText = '';
     
-    // Clear any existing cursor blink event
-    if (this.cursorBlinkEvent) {
-      this.cursorBlinkEvent.remove();
-      this.cursorBlinkEvent = null;
-    }
+    this.stopCursorBlink();
     
-    // Display characters one by one
     for (let i = 0; i < text.length; i++) {
       displayedText += text[i];
       this.dialogueBox.show(displayedText, true);
       
-      // Add a small delay between characters
       await new Promise(resolve => setTimeout(resolve, speed));
       
-      // Allow skipping the animation with spacebar
       if (!this.isStreaming) break;
     }
     
-    // Make sure the full text is displayed at the end
     if (this.isStreaming) {
       this.dialogueBox.show(text, true);
     }
@@ -185,9 +264,24 @@ class DialogueManager {
   }
 
   skipStreaming() {
-    if (this.isStreaming) {
-      this.isStreaming = false;
+    this.isStreaming = false;
+  }
+
+  // === Connection Management ===
+  
+  cancelDisconnectTimeout() {
+    if (this.disconnectTimeout) {
+      clearTimeout(this.disconnectTimeout);
+      this.disconnectTimeout = null;
     }
+  }
+
+  scheduleDisconnect() {
+    this.cancelDisconnectTimeout();
+    
+    this.disconnectTimeout = setTimeout(() => {
+      WebSocketApiService.disconnect();
+    }, 5000);
   }
 }
 
