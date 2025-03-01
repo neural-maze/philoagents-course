@@ -1,11 +1,14 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from opik.integrations.langchain import OpikTracer
 from pydantic import BaseModel
 
-from philoagents.application.conversation_service.generate_response import get_response
+from philoagents.application.conversation_service.generate_response import (
+    get_response,
+    get_streaming_response,
+)
 from philoagents.domain.philosopher_factory import PhilosopherFactory
 
 from .opik_utils import configure
@@ -60,6 +63,61 @@ async def chat(chat_message: ChatMessage):
         opik_tracer.flush()
 
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.websocket("/ws/chat")
+async def websocket_chat(websocket: WebSocket):
+    await websocket.accept()
+
+    try:
+        while True:
+            data = await websocket.receive_json()
+
+            if "message" not in data or "philosopher_id" not in data:
+                await websocket.send_json(
+                    {
+                        "error": "Invalid message format. Required fields: 'message' and 'philosopher_id'"
+                    }
+                )
+                continue
+
+            try:
+                philosopher_factory = PhilosopherFactory()
+                philosopher = philosopher_factory.get_philosopher(
+                    data["philosopher_id"]
+                )
+
+                # Use streaming response instead of get_response
+                response_stream = get_streaming_response(
+                    messages=data["message"],
+                    philosopher_id=data["philosopher_id"],
+                    philosopher_name=philosopher.name,
+                    philosopher_perspective=philosopher.perspective,
+                    philosopher_style=philosopher.style,
+                    philosopher_context="",
+                )
+
+                # Send initial message to indicate streaming has started
+                await websocket.send_json({"streaming": True})
+
+                # Stream each chunk of the response
+                full_response = ""
+                async for chunk in response_stream:
+                    full_response += chunk
+                    await websocket.send_json({"chunk": chunk})
+
+                await websocket.send_json(
+                    {"response": full_response, "streaming": False}
+                )
+
+            except Exception as e:
+                opik_tracer = OpikTracer()
+                opik_tracer.flush()
+
+                await websocket.send_json({"error": str(e)})
+
+    except WebSocketDisconnect:
+        pass
 
 
 if __name__ == "__main__":
