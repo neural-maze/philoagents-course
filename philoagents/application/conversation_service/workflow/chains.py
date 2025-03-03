@@ -26,7 +26,7 @@ def get_philosopher_response_chain():
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", system_message),
+            ("system", system_message.prompt),
             MessagesPlaceholder(variable_name="messages"),
         ],
         template_format="jinja2",
@@ -43,7 +43,7 @@ def get_summary_chain(summary: str = ""):
     prompt = ChatPromptTemplate.from_messages(
         [
             MessagesPlaceholder(variable_name="messages"),
-            ("human", summary_message),
+            ("human", summary_message.prompt),
         ],
         template_format="jinja2",
     )

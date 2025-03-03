@@ -14,10 +14,7 @@ from opik.evaluation.metrics import (
 from philoagents.application.conversation_service.generate_response import get_response
 from philoagents.application.conversation_service.workflow import state_to_str
 from philoagents.domain.philosopher_factory import PhilosopherFactory
-from philoagents.infrastructure import opik_utils
 from philoagents.settings import settings
-
-opik_utils.configure()
 
 
 async def evaluation_task(x: dict) -> dict:
@@ -62,6 +59,19 @@ async def evaluation_task(x: dict) -> dict:
     }
 
 
+def get_used_prompts() -> list[opik.Prompt]:
+    client = opik.Opik()
+
+    prompts = [
+        client.get_prompt(name="philosopher_character_card"),
+        client.get_prompt(name="summary_prompt"),
+        client.get_prompt(name="extend_summary_prompt"),
+    ]
+    prompts = [p for p in prompts if p is not None]
+
+    return prompts
+
+
 def evaluate_agent(
     dataset: opik.Dataset | None,
     workers: int = 2,
@@ -101,6 +111,8 @@ def evaluate_agent(
         "model_id": settings.GROQ_LLM_MODEL,
         "dataset_name": dataset.name,
     }
+    used_prompts = get_used_prompts()
+
     scoring_metrics = [
         Hallucination(),
         AnswerRelevance(),
@@ -120,4 +132,5 @@ def evaluate_agent(
         experiment_config=experiment_config,
         task_threads=workers,
         nb_samples=nb_samples,
+        prompts=used_prompts,
     )

@@ -35,7 +35,7 @@ generate-evaluation-dataset: check-docker-image
 	docker run --rm --network=philoagents-network --env-file .env philoagents-api uv run python -m tools.generate_evaluation_dataset
 
 evaluate-agent: check-docker-image
-	docker run --rm --network=philoagents-network --env-file .env philoagents-api uv run python -m tools.evaluate_agent --workers 1 --nb-samples 10
+	docker run --rm --network=philoagents-network --env-file .env philoagents-api uv run python -m tools.evaluate_agent --workers 1 --nb-samples 1
 
 # --- QA ---
 

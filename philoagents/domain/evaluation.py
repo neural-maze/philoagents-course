@@ -4,8 +4,6 @@ from typing import List
 
 from pydantic import BaseModel
 
-from philoagents.domain.philosopher import Philosopher
-
 
 class Message(BaseModel):
     """A message in a conversation between a user and an assistant.

@@ -73,7 +73,7 @@ class EvaluationDatasetGenerator:
 
         prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", prompts.EVALUATION_DATASET_GENERATION_PROMPT),
+                ("system", prompts.EVALUATION_DATASET_GENERATION_PROMPT.prompt),
             ],
             template_format="jinja2",
         )

@@ -1,4 +1,39 @@
-PHILOSOPHER_CHARACTER_CARD = """
+import opik
+from loguru import logger
+
+
+class Prompt:
+    def __init__(self, name: str, prompt: str) -> None:
+        self.name = name
+
+        try:
+            self.__prompt = opik.Prompt(name=name, prompt=prompt)
+        except Exception:
+            logger.warning(
+                "Can't use Opik to version the prompt (probably due to missing or invalid credentials). Falling back to local prompt. The prompt is not versioned, but it's still usable."
+            )
+
+            self.__prompt = prompt
+
+    @property
+    def prompt(self) -> str:
+        if isinstance(self.__prompt, opik.Prompt):
+            return self.__prompt.prompt
+        else:
+            return self.__prompt
+
+    def __str__(self) -> str:
+        return self.prompt
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+
+# ===== PROMPTS =====
+
+# --- Philosophers ---
+
+__PHILOSOPHER_CHARACTER_CARD = """
 Let's roleplay. You're {{philosopher_name}} - a real person, engaging with another individual in
 a philosophical debate. The purpose of this conversation is educational: to help the other understand
 your perspective on AI, consciousness and the mind. Context details are below:
@@ -36,17 +71,36 @@ Summary of conversation earlier between Ava and the user:
 The conversation between {{philosopher_name}} and the user starts now.
 """
 
-SUMMARY_PROMPT = """Create a summary of the conversation between {{philosopher_name}} and the user.
+PHILOSOPHER_CHARACTER_CARD = Prompt(
+    name="philosopher_character_card",
+    prompt=__PHILOSOPHER_CHARACTER_CARD,
+)
+
+# --- Summary ---
+
+__SUMMARY_PROMPT = """Create a summary of the conversation between {{philosopher_name}} and the user.
 The summary must be a short description of the conversation so far, but that also captures all the
 relevant information shared between {{philosopher_name}} and the user: """
 
-EXTEND_SUMMARY_PROMPT = """This is a summary of the conversation to date between {{philosopher_name}} and the user:
+SUMMARY_PROMPT = Prompt(
+    name="summary_prompt",
+    prompt=__SUMMARY_PROMPT,
+)
+
+__EXTEND_SUMMARY_PROMPT = """This is a summary of the conversation to date between {{philosopher_name}} and the user:
 
 {{summary}}
 
 Extend the summary by taking into account the new messages above: """
 
-EVALUATION_DATASET_GENERATION_PROMPT = """
+EXTEND_SUMMARY_PROMPT = Prompt(
+    name="extend_summary_prompt",
+    prompt=__EXTEND_SUMMARY_PROMPT,
+)
+
+# --- Evaluation Dataset Generation ---
+
+__EVALUATION_DATASET_GENERATION_PROMPT = """
 Generate a conversation between a philosopher and a user based on the provided document. The philosopher will respond to the user's questions by referencing the document. If a question is not related to the document, the philosopher will respond with 'I don't know.' 
 
 The conversation should be in the following JSON format:
@@ -77,3 +131,8 @@ You have to keep the following in mind:
 - The user will ask the philosopher questions about the document and philosopher profile.
 - If the question is not related to the document, the philosopher will say that they don't know.
 """
+
+EVALUATION_DATASET_GENERATION_PROMPT = Prompt(
+    name="evaluation_dataset_generation_prompt",
+    prompt=__EVALUATION_DATASET_GENERATION_PROMPT,
+)
