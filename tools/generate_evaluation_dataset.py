@@ -24,7 +24,7 @@ from philoagents.settings import settings
 @click.option(
     "--max-samples",
     type=int,
-    default=50,
+    default=40,
     help="Maximum number of samples to generate",
 )
 def main(metadata_file: Path, temperature: float, max_samples: int) -> None:

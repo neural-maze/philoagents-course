@@ -15,7 +15,7 @@ from philoagents.settings import settings
 
 
 class EvaluationDatasetGenerator:
-    def __init__(self, temperature: float = 0.8, max_samples: int = 30) -> None:
+    def __init__(self, temperature: float = 0.8, max_samples: int = 40) -> None:
         self.temperature = temperature
         self.max_samples = max_samples
 
@@ -27,7 +27,7 @@ class EvaluationDatasetGenerator:
         extraction_generator = get_extraction_generator(philosophers)
         for philosopher, doc in extraction_generator:
             chunks = self.__splitter.split_documents([doc])
-            for chunk in chunks[:5]:
+            for chunk in chunks[:4]:
                 try:
                     dataset_sample: EvaluationDatasetSample = self.__chain.invoke(
                         {"philosopher": philosopher, "document": chunk.page_content}

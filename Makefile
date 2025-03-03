@@ -23,7 +23,7 @@ check-docker-image:
 		exit 1; \
 	fi
 
-# OFFLINE PIPELINES
+# --- Offline Pipelines ---
 
 create-long-term-memory: check-docker-image
 	docker run --rm --network=philoagents-network --env-file .env philoagents-api uv run python -m tools.create_long_term_memory
@@ -32,7 +32,7 @@ delete-long-term-memory: check-docker-image
 	docker run --rm --network=philoagents-network --env-file .env philoagents-api uv run python -m tools.delete_long_term_memory
 
 generate-evaluation-dataset: check-docker-image
-	docker run --rm --network=philoagents-network --env-file .env philoagents-api uv run python -m tools.generate_evaluation_dataset
+	docker run --rm --network=philoagents-network --env-file .env -v ./data:/app/data philoagents-api uv run python -m tools.generate_evaluation_dataset
 
 evaluate-agent: check-docker-image
 	docker run --rm --network=philoagents-network --env-file .env philoagents-api uv run python -m tools.evaluate_agent --workers 1 --nb-samples 10
