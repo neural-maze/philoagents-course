@@ -22,7 +22,7 @@ infrastructure-stop:
 check-docker-image:
 	@if [ -z "$$(docker images -q philoagents-api 2> /dev/null)" ]; then \
 		echo "Error: philoagents-api Docker image not found."; \
-		echo "Please run 'make infrastructure-up' first to build the required images."; \
+		echo "Please run 'make infrastructure-build' first to build the required images."; \
 		exit 1; \
 	fi
 
