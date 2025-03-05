@@ -59,26 +59,28 @@ export class Game extends Scene
 
     createPhilosophers(map, layers) {
         const philosopherConfigs = [
-            { id: "socrates", name: "Socrates", defaultDirection: "right"},
-            { id: "aristotle", name: "Aristotle", defaultDirection: "right" },
-            { id: "plato", name: "Plato", defaultDirection: "front" },
-            { id: "descartes", name: "Descartes", defaultDirection: "front" },
-            { id: "leibniz", name: "Leibniz", defaultDirection: "front" },
-            { id: "ada_lovelace", name: "Ada Lovelace", defaultDirection: "front" },
-            { id: "turing", name: "Turing", defaultDirection: "front" },
-            { id: "searle", name: "Searle", defaultDirection: "front" },
-            { id: "chomsky", name: "Chomsky", defaultDirection: "front" },
-            { id: "dennett", name: "Dennett", defaultDirection: "front" },
+            { id: "socrates", name: "Socrates", defaultDirection: "right", roamRadius: 800 },
+            { id: "aristotle", name: "Aristotle", defaultDirection: "right", roamRadius: 700 },
+            { id: "plato", name: "Plato", defaultDirection: "front", roamRadius: 750 },
+            { id: "descartes", name: "Descartes", defaultDirection: "front", roamRadius: 650 },
+            { id: "leibniz", name: "Leibniz", defaultDirection: "front", roamRadius: 720 },
+            { id: "ada_lovelace", name: "Ada Lovelace", defaultDirection: "front", roamRadius: 680 },
+            { id: "turing", name: "Turing", defaultDirection: "front", roamRadius: 770 },
+            { id: "searle", name: "Searle", defaultDirection: "front", roamRadius: 730 },
+            { id: "chomsky", name: "Chomsky", defaultDirection: "front", roamRadius: 690 },
+            { id: "dennett", name: "Dennett", defaultDirection: "front", roamRadius: 710 },
             { 
                 id: "miguel", 
                 name: "Miguel", 
                 defaultDirection: "front", 
+                roamRadius: 100,
                 defaultMessage: "Hey! Sorry friend, but I'm a currently writing my Substack article for tomorrow. Check out The Neural Maze if you are interested in my projects!" 
             },
             { 
                 id: "paul", 
                 name: "Paul", 
                 defaultDirection: "front",
+                roamRadius: 100,
                 defaultMessage: "Hey, I'm busy teaching my cat AI with my latest course. I can't talk right now. Check out Decoding ML for more on my thoughts." 
             }
         ];
@@ -95,7 +97,12 @@ export class Game extends Scene
                 atlas: config.id,
                 defaultDirection: config.defaultDirection,
                 worldLayer: layers.worldLayer,
-                defaultMessage: config.defaultMessage
+                defaultMessage: config.defaultMessage,
+                roamRadius: config.roamRadius,
+                moveSpeed: config.moveSpeed || 40,
+                pauseChance: config.pauseChance || 0.2,
+                directionChangeChance: config.directionChangeChance || 0.3,
+                handleCollisions: true
             });
             
             this.philosophers.push(this[config.id]);
@@ -103,6 +110,21 @@ export class Game extends Scene
 
         // Make all philosopher labels visible initially
         this.togglePhilosopherLabels(true);
+
+        // Add collisions between philosophers
+        for (let i = 0; i < this.philosophers.length; i++) {
+            for (let j = i + 1; j < this.philosophers.length; j++) {
+                this.physics.add.collider(
+                    this.philosophers[i].sprite, 
+                    this.philosophers[j].sprite,
+                    () => {
+                        // When philosophers collide, both choose new directions
+                        this.philosophers[i].chooseNewDirection();
+                        this.philosophers[j].chooseNewDirection();
+                    }
+                );
+            }
+        }
     }
 
     checkPhilosopherInteraction() {
@@ -166,6 +188,10 @@ export class Game extends Scene
         });
 
         this.createPlayerAnimations();
+
+        // Set world bounds for physics
+        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        this.physics.world.setBoundsCollision(true, true, true, true);
     }
 
     createPlayerAnimations() {
@@ -204,15 +230,8 @@ export class Game extends Scene
             down: this.cursors.down,
             speed: 0.5,
         });
-
-        // Add key to toggle name labels
-        this.labelKey = this.input.keyboard.addKey('L');
-        this.input.keyboard.on('keydown-L', () => {
-            this.labelsVisible = !this.labelsVisible;
-            this.togglePhilosopherLabels(this.labelsVisible);
-        });
         
-        // Initialize label visibility state
+        // Remove the L key toggle functionality
         this.labelsVisible = true;
     }
 
@@ -238,15 +257,6 @@ export class Game extends Scene
         
         this.dialogueManager = new DialogueManager(this);
         this.dialogueManager.initialize(this.dialogueBox);
-    }
-
-    addHelpText() {
-        this.add.text(16, 16, 'Arrow keys to move\nPress SPACE near philosophers to talk\nPress L to toggle name labels', {
-            font: "18px monospace",
-            fill: "#000000",
-            padding: { x: 20, y: 10 },
-            backgroundColor: "#ffffff",
-        }).setScrollFactor(0).setDepth(30);
     }
 
     update(time, delta) {
