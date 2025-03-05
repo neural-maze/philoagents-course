@@ -112,7 +112,7 @@ export class MainMenu extends Scene {
         elements.textElements = instructionContent.textElements;
         
         // Add close button
-        const closeElements = this.addCloseButton(centerX, centerY + 100, () => {
+        const closeElements = this.addCloseButton(centerX, centerY + 70, () => {
             this.destroyInstructionElements(elements);
         });
         elements.closeButton = closeElements.button;
@@ -157,8 +157,7 @@ export class MainMenu extends Scene {
         const instructions = [
             'Arrow keys for moving',
             'SPACE for talking to philosophers',
-            'ESC for closing the dialogue',
-            'L for toggling philosopher name labels'
+            'ESC for closing the dialogue'
         ];
         
         const textElements = [];
