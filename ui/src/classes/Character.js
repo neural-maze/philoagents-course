@@ -21,7 +21,7 @@ class Character {
     this.sprite = this.scene.physics.add
       .sprite(this.spawnPoint.x, this.spawnPoint.y, this.atlas, this.defaultFrame)
       .setSize(30, 40)
-      .setOffset(0, 0)
+      .setOffset(0, 6)
       .setImmovable(true);
 
     this.scene.physics.add.collider(this.sprite, config.worldLayer);

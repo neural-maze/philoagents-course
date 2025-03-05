@@ -177,9 +177,9 @@ export class Game extends Scene
 
     setupPlayer(map, worldLayer) {
         const spawnPoint = map.findObject("Objects", (obj) => obj.name === "Spawn Point");
-        this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "sophia", "misa-front")
+        this.player = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "sophia", "sophia-front")
             .setSize(30, 40)
-            .setOffset(0, 24);
+            .setOffset(0, 6);
 
         this.physics.add.collider(this.player, worldLayer);
         
@@ -197,16 +197,16 @@ export class Game extends Scene
     createPlayerAnimations() {
         const anims = this.anims;
         const animConfig = [
-            { key: "misa-left-walk", prefix: "misa-left-walk." },
-            { key: "misa-right-walk", prefix: "misa-right-walk." },
-            { key: "misa-front-walk", prefix: "misa-front-walk." },
-            { key: "misa-back-walk", prefix: "misa-back-walk." }
+            { key: "sophia-left-walk", prefix: "sophia-left-walk-" },
+            { key: "sophia-right-walk", prefix: "sophia-right-walk-" },
+            { key: "sophia-front-walk", prefix: "sophia-front-walk-" },
+            { key: "sophia-back-walk", prefix: "sophia-back-walk-" }
         ];
         
         animConfig.forEach(config => {
             anims.create({
                 key: config.key,
-                frames: anims.generateFrameNames("sophia", { prefix: config.prefix, start: 0, end: 3, zeroPad: 3 }),
+                frames: anims.generateFrameNames("sophia", { prefix: config.prefix, start: 0, end: 8, zeroPad: 4 }),
                 frameRate: 10,
                 repeat: -1,
             });
@@ -296,20 +296,26 @@ export class Game extends Scene
 
         this.player.body.velocity.normalize().scale(speed);
 
-        if (this.cursors.left.isDown) {
-            this.player.anims.play("misa-left-walk", true);
-        } else if (this.cursors.right.isDown) {
-            this.player.anims.play("misa-right-walk", true);
-        } else if (this.cursors.up.isDown) {
-            this.player.anims.play("misa-back-walk", true);
-        } else if (this.cursors.down.isDown) {
-            this.player.anims.play("misa-front-walk", true);
+        // Store the velocity after physics calculations
+        const currentVelocity = this.player.body.velocity.clone();
+        
+        // Check if player is actually moving (not blocked)
+        const isMoving = Math.abs(currentVelocity.x) > 0 || Math.abs(currentVelocity.y) > 0;
+        
+        if (this.cursors.left.isDown && isMoving) {
+            this.player.anims.play("sophia-left-walk", true);
+        } else if (this.cursors.right.isDown && isMoving) {
+            this.player.anims.play("sophia-right-walk", true);
+        } else if (this.cursors.up.isDown && isMoving) {
+            this.player.anims.play("sophia-back-walk", true);
+        } else if (this.cursors.down.isDown && isMoving) {
+            this.player.anims.play("sophia-front-walk", true);
         } else {
             this.player.anims.stop();
-            if (prevVelocity.x < 0) this.player.setTexture("sophia", "misa-left");
-            else if (prevVelocity.x > 0) this.player.setTexture("sophia", "misa-right");
-            else if (prevVelocity.y < 0) this.player.setTexture("sophia", "misa-back");
-            else if (prevVelocity.y > 0) this.player.setTexture("sophia", "misa-front");
+            if (prevVelocity.x < 0) this.player.setTexture("sophia", "sophia-left");
+            else if (prevVelocity.x > 0) this.player.setTexture("sophia", "sophia-right");
+            else if (prevVelocity.y < 0) this.player.setTexture("sophia", "sophia-back");
+            else if (prevVelocity.y > 0) this.player.setTexture("sophia", "sophia-front");
         }
     }
 
