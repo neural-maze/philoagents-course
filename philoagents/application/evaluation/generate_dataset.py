@@ -25,8 +25,8 @@ class EvaluationDatasetGenerator:
     def __call__(self, philosophers: list[PhilosopherExtract]) -> EvaluationDataset:
         dataset_samples = []
         extraction_generator = get_extraction_generator(philosophers)
-        for philosopher, doc in extraction_generator:
-            chunks = self.__splitter.split_documents([doc])
+        for philosopher, docs in extraction_generator:
+            chunks = self.__splitter.split_documents(docs)
             for chunk in chunks[:4]:
                 try:
                     dataset_sample: EvaluationDatasetSample = self.__chain.invoke(
