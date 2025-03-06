@@ -21,7 +21,7 @@ export class Preloader extends Scene
         this.load.image("plant-tiles", "tilesets/plant.png");
 
         // Tilemap
-        this.load.tilemapTiledJSON("map", "tilemaps/tuxemon-town.json");
+        this.load.tilemapTiledJSON("map", "tilemaps/philoagents-town.json");
 
         // Character assets
         this.load.atlas("sophia", "characters/sophia/atlas.png", "characters/sophia/atlas.json");
