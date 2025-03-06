@@ -10,7 +10,7 @@ from philoagents.domain.philosopher_factory import PhilosopherFactory
 
 def get_extraction_generator(
     philosophers: list[PhilosopherExtract],
-) -> Generator[tuple[Philosopher, Document], None, None]:
+) -> Generator[tuple[Philosopher, list[Document]], None, None]:
     """
     Extract documents for a list of philosophers, yielding one document at a time along with the philosopher.
 
@@ -37,20 +37,25 @@ def get_extraction_generator(
         philosopher = philosophers_factory.get_philosopher(philosopher_extract.id)
         progress_bar.set_postfix_str(f"Philosopher: {philosopher.name}")
 
-        yield from (
-            (philosopher, doc) for doc in extract(philosopher, philosopher_extract.urls)
-        )
+        philosopher_docs = extract(philosopher, philosopher_extract.urls)
+
+        yield (philosopher, philosopher_docs)
+
+        # yield from (
+        #     (philosopher, doc) for doc in extract(philosopher, philosopher_extract.urls)
+        # )
 
 
 def extract(philosopher: Philosopher, extract_urls: list[str]) -> list[Document]:
     """
-    Extract documents for a single philosopher from all sources.
+    Extract documents for a single philosopher from all sources and deduplicate them.
 
     Args:
         philosopher: Dictionary containing philosopher information.
+        extract_urls: List of URLs to extract content from.
 
     Returns:
-        list[Document]: List of documents extracted for the philosopher.
+        list[Document]: List of deduplicated documents extracted for the philosopher.
     """
 
     docs = []
@@ -143,7 +148,7 @@ def extract_stanford_encyclopedia_of_philosophy(
     if len(urls) == 0:
         return []
 
-    loader = WebBaseLoader()
+    loader = WebBaseLoader(show_progress=False)
     soups = loader.scrape_all(urls)
 
     documents = []

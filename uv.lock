@@ -313,6 +313,19 @@ wheels = [
 ]
 
 [[package]]
+name = "datasketch"
+version = "1.6.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/88/2f/248057ca4d22bd3ffb9bb3e9f4c208240a27e4d0ca9687d6d1d896aeec2a/datasketch-1.6.5.tar.gz", hash = "sha256:ba2848cb74f23d6d3dd444cf24edcbc47b1c34a171b1803231793ed4d74d4fcf", size = 92598 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8d/24/c8b0570c17c64e9d00485ac6f325c3a7ba19ea8b3385c73c85a26a519d77/datasketch-1.6.5-py3-none-any.whl", hash = "sha256:59311b2925b2f37536e9f7c2f46bbc25e8e54379c8635a3fa7ca55d2abb66d1b", size = 89246 },
+]
+
+[[package]]
 name = "debugpy"
 version = "1.8.12"
 source = { registry = "https://pypi.org/simple" }
@@ -1705,6 +1718,7 @@ name = "philoagents"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "datasketch" },
     { name = "fastapi", extra = ["standard"] },
     { name = "ipykernel" },
     { name = "langchain-community" },
@@ -1731,6 +1745,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "datasketch", specifier = ">=1.6.5" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.8" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "langchain-community", specifier = ">=0.3.17" },

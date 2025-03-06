@@ -22,6 +22,7 @@ dependencies = [
     "wikipedia>=1.4.0",
     "ipykernel>=6.29.5",
     "pydantic>=2.10.6",
+    "datasketch>=1.6.5",
 ]
 
 [dependency-groups]

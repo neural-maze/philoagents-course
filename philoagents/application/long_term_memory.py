@@ -1,7 +1,7 @@
 from langchain_core.documents import Document
 from loguru import logger
 
-from philoagents.application.data import get_extraction_generator
+from philoagents.application.data import get_extraction_generator, deduplicate_documents
 from philoagents.application.rag.retrievers import Retriever, get_retriever
 from philoagents.application.rag.splitters import Splitter, get_splitter
 from philoagents.domain.philosopher import PhilosopherExtract
@@ -38,8 +38,11 @@ class LongTermMemoryCreator:
             client.clear_collection()
 
         extraction_generator = get_extraction_generator(philosophers)
-        for _, doc in extraction_generator:
-            chunked_docs = self.splitter.split_documents([doc])
+        for _, docs in extraction_generator:
+            chunked_docs = self.splitter.split_documents(docs)
+
+            chunked_docs = deduplicate_documents(chunked_docs, threshold=0.7)
+
             self.retriever.vectorstore.add_documents(chunked_docs)
 
         self.__create_index()
