@@ -9,15 +9,18 @@ from loguru import logger
 def deduplicate_documents(
     documents: List[Document], threshold: float = 0.8
 ) -> List[Document]:
-    """
-    Remove duplicate documents from a list based on content similarity.
+    """Remove duplicate documents from a list based on content similarity.
+
+    Uses MinHash algorithm to identify similar documents and removes duplicates
+    based on the specified similarity threshold.
 
     Args:
-        documents: List of documents to deduplicate
-        threshold: Similarity threshold to consider documents as duplicates
+        documents: List of documents to deduplicate.
+        threshold: Similarity threshold to consider documents as duplicates.
+            Value between 0.0 and 1.0, where higher values require more similarity.
 
     Returns:
-        List of documents with duplicates removed
+        List of documents with duplicates removed.
     """
 
     if not documents:
@@ -29,7 +32,6 @@ def deduplicate_documents(
         f"{len(duplicates)} / {len(documents)} documents are duplicates. Removing them."
     )
 
-    # Create a set of indices to remove
     indices_to_remove = set()
     for i, j, _ in duplicates:
         # Keep the document with more content
@@ -38,34 +40,36 @@ def deduplicate_documents(
         else:
             indices_to_remove.add(i)
 
-    # Return documents that aren't in the removal set
     return [doc for i, doc in enumerate(documents) if i not in indices_to_remove]
 
 
 def find_duplicates(
     documents: List[Document], threshold: float = 0.8, num_perm: int = 512
 ) -> List[Tuple[int, int, float]]:
-    """
-    Find duplicate documents using MinHash algorithm.
+    """Find duplicate documents using MinHash algorithm.
+
+    Creates MinHash signatures for each document and uses Locality Sensitive Hashing (LSH)
+    to efficiently find similar document pairs.
 
     Args:
-        documents: List of documents to check for duplicates
-        threshold: Similarity threshold (0.0-1.0) to consider documents as duplicates
-        num_perm: Number of permutations for MinHash (higher = more accurate but slower)
+        documents: List of documents to check for duplicates.
+        threshold: Similarity threshold (0.0-1.0) to consider documents as duplicates.
+            Higher values require more similarity between documents.
+        num_perm: Number of permutations for MinHash. Higher values provide more
+            accurate similarity estimates but require more computation.
 
     Returns:
         List of tuples containing (doc_index1, doc_index2, similarity_score)
-        for document pairs that exceed the similarity threshold
+        for document pairs that exceed the similarity threshold.
     """
-    # Create MinHash objects for each document
+
     minhashes = []
 
     for doc in documents:
         minhash = MinHash(num_perm=num_perm)
-        # Create shingles (3-grams of words)
         text = doc.page_content.lower()
-        # Clean text and split into words
         words = re.findall(r"\w+", text)
+
         # Create shingles (3-grams of words)
         for i in range(len(words) - 3):
             shingle = " ".join(words[i : i + 3])
@@ -79,15 +83,13 @@ def find_duplicates(
     for i, minhash in enumerate(minhashes):
         lsh.insert(i, minhash)
 
-    # Find duplicates
     duplicates = []
     for i, minhash in enumerate(minhashes):
-        # Query for similar documents
         similar_docs = lsh.query(minhash)
         # Remove self from results
         similar_docs = [j for j in similar_docs if j != i]
 
-        # Calculate actual similarity scores
+        # Find duplicates
         for j in similar_docs:
             similarity = minhashes[i].jaccard(minhashes[j])
             if similarity >= threshold:

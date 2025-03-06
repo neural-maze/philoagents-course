@@ -11,15 +11,14 @@ from philoagents.domain.philosopher_factory import PhilosopherFactory
 def get_extraction_generator(
     philosophers: list[PhilosopherExtract],
 ) -> Generator[tuple[Philosopher, list[Document]], None, None]:
-    """
-    Extract documents for a list of philosophers, yielding one document at a time along with the philosopher.
-
+    """Extract documents for a list of philosophers, yielding one at a time.
+    
     Args:
-        philosophers: A list of dictionaries containing philosopher information.
-
+        philosophers: A list of PhilosopherExtract objects containing philosopher information.
+        
     Yields:
-        tuple[Philosopher, Document]: A tuple containing the philosopher dictionary and a document
-            extracted for that philosopher, one at a time.
+        tuple[Philosopher, list[Document]]: A tuple containing the philosopher object and a list of
+            documents extracted for that philosopher.
     """
 
     progress_bar = tqdm(
@@ -41,19 +40,14 @@ def get_extraction_generator(
 
         yield (philosopher, philosopher_docs)
 
-        # yield from (
-        #     (philosopher, doc) for doc in extract(philosopher, philosopher_extract.urls)
-        # )
-
 
 def extract(philosopher: Philosopher, extract_urls: list[str]) -> list[Document]:
-    """
-    Extract documents for a single philosopher from all sources and deduplicate them.
-
+    """Extract documents for a single philosopher from all sources and deduplicate them.
+    
     Args:
-        philosopher: Dictionary containing philosopher information.
+        philosopher: Philosopher object containing philosopher information.
         extract_urls: List of URLs to extract content from.
-
+        
     Returns:
         list[Document]: List of deduplicated documents extracted for the philosopher.
     """
@@ -67,14 +61,13 @@ def extract(philosopher: Philosopher, extract_urls: list[str]) -> list[Document]
 
 
 def extract_wikipedia(philosopher: Philosopher) -> list[Document]:
-    """
-    Extract documents for a single philosopher from Wikipedia.
-
+    """Extract documents for a single philosopher from Wikipedia.
+    
     Args:
-        philosopher: Dictionary containing philosopher information.
-
+        philosopher: Philosopher object containing philosopher information.
+        
     Returns:
-        list[Document]: List of documents extracted for the philosopher.
+        list[Document]: List of documents extracted from Wikipedia for the philosopher.
     """
 
     loader = WikipediaLoader(
@@ -95,15 +88,14 @@ def extract_wikipedia(philosopher: Philosopher) -> list[Document]:
 def extract_stanford_encyclopedia_of_philosophy(
     philosopher: Philosopher, urls: list[str]
 ) -> list[Document]:
-    """
-    Extract documents for a single philosopher from a generic web source.
-
+    """Extract documents for a single philosopher from Stanford Encyclopedia of Philosophy.
+    
     Args:
-        philosopher: Dictionary containing philosopher information.
+        philosopher: Philosopher object containing philosopher information.
         urls: List of URLs to extract content from.
-
+        
     Returns:
-        list[Document]: List of documents extracted for the philosopher.
+        list[Document]: List of documents extracted from Stanford Encyclopedia for the philosopher.
     """
 
     def extract_paragraphs_and_headers(soup) -> str:
