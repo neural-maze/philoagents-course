@@ -1,4 +1,5 @@
 from langchain_core.documents import Document
+from loguru import logger
 
 from philoagents.application.data import get_extraction_generator
 from philoagents.application.rag.retrievers import Retriever, get_retriever
@@ -25,6 +26,17 @@ class LongTermMemoryCreator:
         return cls(retriever, splitter)
 
     def __call__(self, philosophers: list[PhilosopherExtract]) -> None:
+        if len(philosophers) == 0:
+            logger.warning("No philosophers to extract. Exiting.")
+
+            return
+
+        # First clear the long term memory collection to avoid duplicates.
+        with MongoClientWrapper(
+            model=Document, collection_name=settings.MONGO_LONG_TERM_MEMORY_COLLECTION
+        ) as client:
+            client.clear_collection()
+
         extraction_generator = get_extraction_generator(philosophers)
         for _, doc in extraction_generator:
             chunked_docs = self.splitter.split_documents([doc])

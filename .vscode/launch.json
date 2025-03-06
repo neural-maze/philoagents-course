@@ -6,7 +6,10 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": {
+                "MONGO_URI": "mongodb://philoagents:philoagents@localhost:27017/?directConnection=true"
+            }
         },
         {
             "name": "Create Long Term Memory",
@@ -15,7 +18,10 @@
             "cwd": "${workspaceFolder}",
             "module": "tools.create_long_term_memory",
             "args": [],
-            "justMyCode": false
+            "justMyCode": false,
+            "env": {
+                "MONGO_URI": "mongodb://philoagents:philoagents@localhost:27017/?directConnection=true"
+            }
         },
         {
             "name": "Evaluate Agent",
@@ -24,7 +30,10 @@
             "cwd": "${workspaceFolder}",
             "module": "tools.evaluate_agent",
             "args": [],
-            "justMyCode": false
+            "justMyCode": false,
+            "env": {
+                "MONGO_URI": "mongodb://philoagents:philoagents@localhost:27017/?directConnection=true"
+            }
         },
         {
             "name": "Generate Evaluation Dataset",
@@ -33,7 +42,10 @@
             "cwd": "${workspaceFolder}",
             "module": "tools.generate_evaluation_dataset",
             "args": [],
-            "justMyCode": false
+            "justMyCode": false,
+            "env": {
+                "MONGO_URI": "mongodb://philoagents:philoagents@localhost:27017/?directConnection=true"
+            }
         }
     ]
 }

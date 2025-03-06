@@ -2,61 +2,53 @@
     {
         "id": "plato",
         "urls": [
-            "https://en.wikipedia.org/wiki/Plato"
+            "https://plato.stanford.edu/entries/plato/"
         ]
     },
     {
         "id": "aristotle",
         "urls": [
-            "https://en.wikipedia.org/wiki/Aristotle"
+            "https://plato.stanford.edu/entries/aristotle/"
         ]
     },
     {
         "id": "socrates",
         "urls": [
-            "https://en.wikipedia.org/wiki/Socrates"
+            "https://plato.stanford.edu/entries/socrates/"
         ]
     },
     {
         "id": "descartes",
         "urls": [
-            "https://en.wikipedia.org/wiki/René_Descartes"
+            "https://plato.stanford.edu/entries/descartes/"
         ]
     },
     {
         "id": "leibniz",
         "urls": [
-            "https://en.wikipedia.org/wiki/Gottfried_Wilhelm_Leibniz"
+            "https://plato.stanford.edu/entries/leibniz/"
         ]
     },
     {
         "id": "ada_lovelace",
-        "urls": [
-            "https://en.wikipedia.org/wiki/Ada_Lovelace"
-        ]
+        "urls": []
     },
     {
         "id": "turing",
         "urls": [
-            "https://en.wikipedia.org/wiki/Alan_Turing"
+            "https://plato.stanford.edu/entries/turing/"
         ]
     },
     {
         "id": "searle",
-        "urls": [
-            "https://en.wikipedia.org/wiki/John_Searle"
-        ]
+        "urls": []
     },
     {
         "id": "chomsky",
-        "urls": [
-            "https://en.wikipedia.org/wiki/Noam_Chomsky"
-        ]
+        "urls": []
     },
     {
         "id": "dennett",
-        "urls": [
-            "https://en.wikipedia.org/wiki/Daniel_Dennett"
-        ]
+        "urls": []
     }
 ]
