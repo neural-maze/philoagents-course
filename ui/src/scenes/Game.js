@@ -73,14 +73,14 @@ export class Game extends Scene
                 id: "miguel", 
                 name: "Miguel", 
                 defaultDirection: "front", 
-                roamRadius: 100,
+                roamRadius: 300,
                 defaultMessage: "Hey! Sorry friend, but I'm a currently writing my Substack article for tomorrow. Check out The Neural Maze if you are interested in my projects!" 
             },
             { 
                 id: "paul", 
                 name: "Paul", 
                 defaultDirection: "front",
-                roamRadius: 100,
+                roamRadius: 300,
                 defaultMessage: "Hey, I'm busy teaching my cat AI with my latest course. I can't talk right now. Check out Decoding ML for more on my thoughts." 
             }
         ];
@@ -233,6 +233,14 @@ export class Game extends Scene
         
         // Remove the L key toggle functionality
         this.labelsVisible = true;
+        
+        // Add ESC key for pause menu
+        this.input.keyboard.on('keydown-ESC', () => {
+            if (!this.dialogueBox.isVisible()) {
+                this.scene.pause();
+                this.scene.launch('PauseMenu');
+            }
+        });
     }
 
     setupDialogueSystem() {

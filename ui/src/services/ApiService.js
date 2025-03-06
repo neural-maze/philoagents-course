@@ -39,6 +39,26 @@ class ApiService {
   getFallbackResponse(philosopher) {
     return `I'm sorry, ${philosopher.name || 'the philosopher'} is unavailable at the moment. Please try again later.`;
   }
+
+  async resetMemory() {
+    try {
+      const response = await fetch(`${this.apiUrl}/reset-memory`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to reset memory');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error resetting memory:', error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService(); 
