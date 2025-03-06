@@ -9,6 +9,9 @@ from philoagents.application.conversation_service.generate_response import (
     get_response,
     get_streaming_response,
 )
+from philoagents.application.conversation_service.reset_conversation import (
+    reset_conversation_state,
+)
 from philoagents.domain.philosopher_factory import PhilosopherFactory
 
 from .opik_utils import configure
@@ -118,6 +121,22 @@ async def websocket_chat(websocket: WebSocket):
 
     except WebSocketDisconnect:
         pass
+
+
+@app.post("/reset-memory")
+async def reset_conversation():
+    """Resets the conversation state. It deletes the two collections needed for keeping LangGraph state in MongoDB.
+
+    Raises:
+        HTTPException: If there is an error resetting the conversation state.
+    Returns:
+        dict: A dictionary containing the result of the reset operation.
+    """
+    try:
+        result = await reset_conversation_state()
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
