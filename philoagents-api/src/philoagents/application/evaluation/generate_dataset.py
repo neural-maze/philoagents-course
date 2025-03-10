@@ -8,10 +8,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from loguru import logger
 
 from philoagents.application.data.extract import get_extraction_generator
+from philoagents.config import settings
 from philoagents.domain import prompts
 from philoagents.domain.evaluation import EvaluationDataset, EvaluationDatasetSample
 from philoagents.domain.philosopher import PhilosopherExtract
-from philoagents.config import settings
 
 
 class EvaluationDatasetGenerator:

@@ -13,8 +13,8 @@ from opik.evaluation.metrics import (
 
 from philoagents.application.conversation_service.generate_response import get_response
 from philoagents.application.conversation_service.workflow import state_to_str
-from philoagents.domain.philosopher_factory import PhilosopherFactory
 from philoagents.config import settings
+from philoagents.domain.philosopher_factory import PhilosopherFactory
 
 
 async def evaluation_task(x: dict) -> dict:

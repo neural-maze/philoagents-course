@@ -13,27 +13,27 @@ services:
     networks:
       - philoagents-network
   api:
-    container_name: agent-backend
+    container_name: philoagents-api
     build:
-      context: .
-      dockerfile: philoagents/Dockerfile
+      context: ./philoagents-api
+      dockerfile: Dockerfile
     environment:
       - MONGODB_URI=mongodb://philoagents:philoagents@local_dev_atlas:27017/?directConnection=true
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ./philoagents-api/.env
     networks:
       - philoagents-network
   ui:
-    container_name: philosopher-ui
+    container_name: philoagents-ui
     build:
-      context: ./ui
+      context: ./philoagents-ui
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     volumes:
-      - ./ui:/app
+      - ./philoagents-ui:/app
       - /app/node_modules
     depends_on:
       - api

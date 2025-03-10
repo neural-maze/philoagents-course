@@ -4,8 +4,8 @@ import click
 from loguru import logger
 
 from philoagents.application.evaluation import EvaluationDatasetGenerator
-from philoagents.domain.philosopher import PhilosopherExtract
 from philoagents.config import settings
+from philoagents.domain.philosopher import PhilosopherExtract
 
 
 @click.command()

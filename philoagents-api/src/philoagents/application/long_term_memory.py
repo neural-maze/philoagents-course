@@ -1,12 +1,12 @@
 from langchain_core.documents import Document
 from loguru import logger
 
-from philoagents.application.data import get_extraction_generator, deduplicate_documents
+from philoagents.application.data import deduplicate_documents, get_extraction_generator
 from philoagents.application.rag.retrievers import Retriever, get_retriever
 from philoagents.application.rag.splitters import Splitter, get_splitter
+from philoagents.config import settings
 from philoagents.domain.philosopher import PhilosopherExtract
 from philoagents.infrastructure.mongo import MongoClientWrapper, MongoIndex
-from philoagents.config import settings
 
 
 class LongTermMemoryCreator:

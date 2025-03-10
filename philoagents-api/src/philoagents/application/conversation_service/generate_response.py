@@ -1,7 +1,7 @@
 import uuid
 from typing import Any, AsyncGenerator, Union
 
-from langchain_core.messages import AIMessage, HumanMessage, AIMessageChunk
+from langchain_core.messages import AIMessage, AIMessageChunk, HumanMessage
 from langgraph.checkpoint.mongodb.aio import AsyncMongoDBSaver
 from opik.integrations.langchain import OpikTracer
 

@@ -3,8 +3,8 @@ from pathlib import Path
 import click
 
 from philoagents.application import LongTermMemoryCreator
-from philoagents.domain.philosopher import PhilosopherExtract
 from philoagents.config import settings
+from philoagents.domain.philosopher import PhilosopherExtract
 
 
 @click.command()

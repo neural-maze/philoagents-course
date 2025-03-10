@@ -12,10 +12,10 @@ def get_extraction_generator(
     philosophers: list[PhilosopherExtract],
 ) -> Generator[tuple[Philosopher, list[Document]], None, None]:
     """Extract documents for a list of philosophers, yielding one at a time.
-    
+
     Args:
         philosophers: A list of PhilosopherExtract objects containing philosopher information.
-        
+
     Yields:
         tuple[Philosopher, list[Document]]: A tuple containing the philosopher object and a list of
             documents extracted for that philosopher.
@@ -43,11 +43,11 @@ def get_extraction_generator(
 
 def extract(philosopher: Philosopher, extract_urls: list[str]) -> list[Document]:
     """Extract documents for a single philosopher from all sources and deduplicate them.
-    
+
     Args:
         philosopher: Philosopher object containing philosopher information.
         extract_urls: List of URLs to extract content from.
-        
+
     Returns:
         list[Document]: List of deduplicated documents extracted for the philosopher.
     """
@@ -62,10 +62,10 @@ def extract(philosopher: Philosopher, extract_urls: list[str]) -> list[Document]
 
 def extract_wikipedia(philosopher: Philosopher) -> list[Document]:
     """Extract documents for a single philosopher from Wikipedia.
-    
+
     Args:
         philosopher: Philosopher object containing philosopher information.
-        
+
     Returns:
         list[Document]: List of documents extracted from Wikipedia for the philosopher.
     """
@@ -89,11 +89,11 @@ def extract_stanford_encyclopedia_of_philosophy(
     philosopher: Philosopher, urls: list[str]
 ) -> list[Document]:
     """Extract documents for a single philosopher from Stanford Encyclopedia of Philosophy.
-    
+
     Args:
         philosopher: Philosopher object containing philosopher information.
         urls: List of URLs to extract content from.
-        
+
     Returns:
         list[Document]: List of documents extracted from Stanford Encyclopedia for the philosopher.
     """

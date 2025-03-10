@@ -4,12 +4,12 @@ from langchain_core.prompts import (
 )
 from langchain_groq import ChatGroq
 
+from philoagents.config import settings
 from philoagents.domain.prompts import (
     EXTEND_SUMMARY_PROMPT,
     PHILOSOPHER_CHARACTER_CARD,
     SUMMARY_PROMPT,
 )
-from philoagents.config import settings
 
 
 def get_chat_model(temperature: float = 0.7) -> ChatGroq:
