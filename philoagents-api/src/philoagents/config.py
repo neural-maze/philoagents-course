@@ -24,7 +24,6 @@ class Settings(BaseSettings):
     MONGO_DB_NAME: str = "philoagents"
     MONGO_STATE_CHECKPOINT_COLLECTION: str = "philosopher_state_checkpoints"
     MONGO_STATE_WRITES_COLLECTION: str = "philosopher_state_writes"
-    MONGO_CONTEXT_COLLECTION: str = "philosopher_context"
     MONGO_LONG_TERM_MEMORY_COLLECTION: str = "philosopher_long_term_memory"
 
     # --- Comet ML & Opik Configuration ---
