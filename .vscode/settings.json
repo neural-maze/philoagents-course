@@ -12,7 +12,4 @@
         "notebook.source.fixAll": true,
         "notebook.source.organizeImports": true
     },
-    "python.pythonPath": ".venv/bin/python",
-    "python.envFile": "${workspaceRoot}/.env",
-    "python.jediEnabled": false
 }
