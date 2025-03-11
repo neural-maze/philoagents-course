@@ -49,7 +49,6 @@ def get_hybrid_search_retriever(
         MongoDBAtlasHybridSearchRetriever: A configured hybrid search retriever using both
             vector and text search capabilities.
     """
-    print(settings.MONGO_URI)
     vectorstore = MongoDBAtlasVectorSearch.from_connection_string(
         connection_string=settings.MONGO_URI,
         embedding=embedding_model,

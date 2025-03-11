@@ -1,9 +1,7 @@
-from langchain_core.prompts import (
-    ChatPromptTemplate,
-    MessagesPlaceholder,
-)
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_groq import ChatGroq
 
+from philoagents.application.conversation_service.workflow.tools import tools
 from philoagents.config import settings
 from philoagents.domain.prompts import (
     EXTEND_SUMMARY_PROMPT,
@@ -22,6 +20,7 @@ def get_chat_model(temperature: float = 0.7) -> ChatGroq:
 
 def get_philosopher_response_chain():
     model = get_chat_model()
+    model = model.bind_tools(tools)
     system_message = PHILOSOPHER_CHARACTER_CARD
 
     prompt = ChatPromptTemplate.from_messages(

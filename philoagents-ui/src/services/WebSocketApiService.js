@@ -5,7 +5,7 @@ class WebSocketApiService {
     this.messageCallbacks = new Map();
     this.connected = false;
     this.connectionPromise = null;
-    this.connectionTimeout = 5000;
+    this.connectionTimeout = 10000;
   }
 
   connect() {

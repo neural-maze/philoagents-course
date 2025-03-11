@@ -1,12 +1,18 @@
 from langchain_core.messages import RemoveMessage
 from langchain_core.runnables import RunnableConfig
+from langgraph.prebuilt import ToolNode
 
 from philoagents.application.conversation_service.workflow.chains import (
     get_philosopher_response_chain,
     get_summary_chain,
 )
 from philoagents.application.conversation_service.workflow.state import PhilosopherState
+from philoagents.application.conversation_service.workflow.tools import tools
 from philoagents.config import settings
+
+
+
+retriever_node = ToolNode(tools)
 
 
 async def conversation_node(state: PhilosopherState, config: RunnableConfig):
