@@ -74,7 +74,7 @@ export class Game extends Scene
                 name: "Miguel", 
                 defaultDirection: "front", 
                 roamRadius: 300,
-                defaultMessage: "Hey! Sorry friend, but I'm a currently writing my Substack article for tomorrow. Check out The Neural Maze if you are interested in my projects!" 
+                defaultMessage: "Hey there! I'm Miguel, but you can call me Mr Agent. I'd love to chat, but I'm currently writing my Substack article for tomorrow. If you're curious about my work, take a look at The Neural Maze!" 
             },
             { 
                 id: "paul", 

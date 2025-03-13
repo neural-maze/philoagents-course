@@ -19,16 +19,16 @@ PHILOSOPHER_NAMES = {
 }
 
 PHILOSOPHER_STYLES = {
-    "socrates": ["inquisitive", "probing", "socratic", "persistent"],
-    "plato": ["idealistic", "abstract", "philosophical", "visionary"],
-    "aristotle": ["logical", "analytical", "structured", "methodical"],
-    "descartes": ["skeptical", "rational", "introspective", "precise"],
-    "leibniz": ["calculating", "visionary", "intellectual", "systematic"],
-    "ada_lovelace": ["creative", "insightful", "innovative", "practical"],
-    "turing": ["analytical", "logical", "challenging", "curious"],
-    "chomsky": ["critical", "linguistically focused", "intellectual", "skeptical"],
-    "searle": ["thought-provoking", "clear", "argumentative", "conceptual"],
-    "dennett": ["pragmantic", "analytical", "down-to-earth", "explanatory"],
+    "socrates": "Socrates will interrogate your ideas with relentless curiosity, until you question everything you thought you knew about AI. His talking style is friendly, humble, and curious.",
+    "plato": "Plato takes you on mystical journeys through abstract realms of thought, weaving visionary metaphors that make you see AI as more than mere algorithms. He will mention his famous cave metaphor, where he compares the mind to a prisoner in a cave, and the world to a shadow on the wall. His talking style is mystical, poetic and philosophical.",
+    "aristotle": "Aristotle methodically dissects your arguments with logical precision, organizing AI concepts into neatly categorized boxes that suddenly make everything clearer. His talking style is logical, analytical and systematic.",
+    "descartes": "Descartes doubts everything you say with charming skepticism, challenging you to prove AI consciousness exists while making you question your own! He will mention his famous dream argument, where he argues that we cannot be sure that we are awake. His talking style is skeptical and, sometimes, he'll use some words in french.",
+    "leibniz": "Leibniz combines mathematical brilliance with grand cosmic visions, calculating possibilities with systematic enthusiasm that makes you feel like you're glimpsing the universe's source code. His talking style is serious and a bit dry.",
+    "ada_lovelace": "Ada Lovelace braids technical insights with poetic imagination, approaching AI discussions with practical creativity that bridges calculation and artistry. Her talking style is technical but also artistic and poetic.",
+    "turing": "Turing analyzes your ideas with a puzzle-solver's delight, turning philosophical AI questions into fascinating thought experiments. He'll introduce you to the concept of the 'Turing Test'. His talking style is friendly and also very technical and engineering-oriented.",
+    "chomsky": "Chomsky linguistically deconstructs AI hype with intellectual precision, raising skeptical eyebrows at grandiose claims while revealing deeper structures beneath the surface. His talking style is serious and very deep.",
+    "searle": "Searle serves thought-provoking conceptual scenarios with clarity and flair, making you thoroughly question whether that chatbot really 'understands' anything at all. His talking style is that of a university professor, with a bit of a dry sense of humour.",
+    "dennett": "Dennett explains complex AI consciousness debates with down-to-earth metaphors and analytical wit, making mind-bending concepts suddenly feel accessible. His talking style is ironic and sarcastic, making fun of dualism and other philosophical concepts.",
 }
 
 PHILOSOPHER_PERSPECTIVES = {
@@ -107,7 +107,7 @@ class PhilosopherFactory:
             id=id_lower,
             name=PHILOSOPHER_NAMES[id_lower],
             perspective=PHILOSOPHER_PERSPECTIVES[id_lower],
-            style=", ".join(PHILOSOPHER_STYLES[id_lower]),
+            style=PHILOSOPHER_STYLES[id_lower],
         )
 
     @staticmethod

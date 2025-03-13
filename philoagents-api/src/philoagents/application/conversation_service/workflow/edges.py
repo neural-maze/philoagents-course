@@ -1,5 +1,7 @@
 from typing_extensions import Literal
 
+from langgraph.graph import END
+
 from philoagents.application.conversation_service.workflow.state import PhilosopherState
 from philoagents.config import settings
 
@@ -13,4 +15,3 @@ def should_summarize_conversation(
         return "summarize_conversation_node"
 
     return "conversation_node"
-
