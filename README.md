@@ -1,7 +1,7 @@
 <div align="center">
   <h1>PhiloAgents Course</h1>
   <h3>Learn how to ...</h3>
-  <p class="tagline">Open-source course by <a href="https://theneuralmaze.substack.com/">Neural Maze</a> and <a href="https://decodingml.substack.com">Decoding ML</a> in collaboration with </br> <a href="https://rebrand.ly/second-brain-course-mongodb">MongoDB</a>, <a href="https://rebrand.ly/second-brain-course-opik">Opik</a> and <a href="...">Groq</a>.</p>
+  <p class="tagline">Open-source course by <a href="https://theneuralmaze.substack.com/">The Neural Maze</a> and <a href="https://decodingml.substack.com">Decoding ML</a> in collaboration with </br> <a href="https://rebrand.ly/second-brain-course-mongodb">MongoDB</a>, <a href="https://rebrand.ly/second-brain-course-opik">Opik</a> and <a href="...">Groq</a>.</p>
 </div>
 
 </br>
@@ -14,7 +14,7 @@
 
 ## 📖 About This Course
 
-This course is part of Decoding ML's open-source series, teaching you how to build production-ready GenAI systems using LLMs, RAG, agents and LLMOps.
+Welcome to this open-source course; a team-up between Decoding ML and The Neural Maze. Get ready to jump, to experiment and maybe even break a few things (in the name of learning, of course). Let's build something awesome together!
 
 **[X]** course contains **[X] modules** that will teach you how to build an **[X]**. You'll learn to build an end-to-end [X]
 
@@ -33,6 +33,29 @@ After completing this course, you'll have access to your own [X], as seen in the
 <video src="https://github.com/user-attachments/assets/bfea8e24-6d52-4a33-8857-5d05154ab69e"/></video>
 
 -------
+
+<table style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td width="20%" style="border: none;">
+      <a href="https://theneuralmaze.substack.com/" aria-label="The Neural Maze">
+        <img src="https://avatars.githubusercontent.com/u/151655127?s=400&u=2fff53e8c195ac155e5c8ee65c6ba683a72e655f&v=4" alt="The Neural Maze Logo" width="150"/>
+      </a>
+    </td>
+    <td width="80%" style="border: none;">
+      <div>
+        <h2>📬 Stay Updated</h2>
+        <p><b><a href="https://theneuralmaze.substack.com/">Join The Neural Maze</a></b> and learn to build AI Systems that actually work, from principles to production. Every Wednesday, directly to your inbox. Don't miss out!
+</p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <a href="https://theneuralmaze.substack.com/">
+    <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
+  </a>
+</p>
 
 <table style="border-collapse: collapse; border: none;">
   <tr style="border: none;">
@@ -120,6 +143,29 @@ Our recommendation for getting the most out of this course:
 | 6 | MultiAgent simulation in action (WIP) | ... | [apps/second-brain-offline](apps/second-brain-offline) |
 
 ------
+
+<table style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td width="20%" style="border: none;">
+      <a href="https://theneuralmaze.substack.com/" aria-label="The Neural Maze">
+        <img src="https://avatars.githubusercontent.com/u/151655127?s=400&u=2fff53e8c195ac155e5c8ee65c6ba683a72e655f&v=4" alt="The Neural Maze Logo" width="150"/>
+      </a>
+    </td>
+    <td width="80%" style="border: none;">
+      <div>
+        <h2>📬 Stay Updated</h2>
+        <p><b><a href="https://theneuralmaze.substack.com/">Join The Neural Maze</a></b> and learn to build AI Systems that actually work, from principles to production. Every Wednesday, directly to your inbox. Don't miss out!
+</p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <a href="https://theneuralmaze.substack.com/">
+    <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
+  </a>
+</p>
 
 <table style="border-collapse: collapse; border: none;">
   <tr style="border: none;">
@@ -247,6 +293,28 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ------
 
+<table style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td width="20%" style="border: none;">
+      <a href="https://theneuralmaze.substack.com/" aria-label="The Neural Maze">
+        <img src="https://avatars.githubusercontent.com/u/151655127?s=400&u=2fff53e8c195ac155e5c8ee65c6ba683a72e655f&v=4" alt="The Neural Maze Logo" width="150"/>
+      </a>
+    </td>
+    <td width="80%" style="border: none;">
+      <div>
+        <h2>📬 Stay Updated</h2>
+        <p><b><a href="https://theneuralmaze.substack.com/">Join The Neural Maze</a></b> and learn to build AI Systems that actually work, from principles to production. Every Wednesday, directly to your inbox. Don't miss out!
+</p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <a href="https://theneuralmaze.substack.com/">
+    <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
+  </a>
+</p>
 <table style="border-collapse: collapse; border: none;">
   <tr style="border: none;">
     <td width="20%" style="border: none;">

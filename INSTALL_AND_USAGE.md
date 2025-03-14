@@ -1,6 +1,29 @@
 <table style="border-collapse: collapse; border: none;">
   <tr style="border: none;">
     <td width="20%" style="border: none;">
+      <a href="https://theneuralmaze.substack.com/" aria-label="The Neural Maze">
+        <img src="https://avatars.githubusercontent.com/u/151655127?s=400&u=2fff53e8c195ac155e5c8ee65c6ba683a72e655f&v=4" alt="The Neural Maze Logo" width="150"/>
+      </a>
+    </td>
+    <td width="80%" style="border: none;">
+      <div>
+        <h2>📬 Stay Updated</h2>
+        <p><b><a href="https://theneuralmaze.substack.com/">Join The Neural Maze</a></b> and learn to build AI Systems that actually work, from principles to production. Every Wednesday, directly to your inbox. Don't miss out!
+</p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <a href="https://theneuralmaze.substack.com/">
+    <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
+  </a>
+</p>
+
+<table style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td width="20%" style="border: none;">
       <a href="https://decodingml.substack.com/" aria-label="Decoding ML">
         <img src="https://github.com/user-attachments/assets/f2f2f9c0-54b7-4ae3-bf8d-23a359c86982" alt="Decoding ML Logo" width="150"/>
       </a>
@@ -55,7 +78,7 @@ Also, the course requires access to these cloud services. The authentication to 
 
 | Service | Purpose | Cost | Environment Variable | Setup Guide | Starting with Module |
 |---------|---------|------|---------------------|-------------| ---------------------|
-| [Qroq](https://groq.com?utm_source=both&utm_medium=github&utm_campaign=Philoagents) | LLM API | Free tier | `HUGGINGFACE_ACCESS_TOKEN` | [Quick Start Guide](...) | Module 1 |
+| [Groq](https://groq.com?utm_source=both&utm_medium=github&utm_campaign=Philoagents) | LLM API | Free tier | `HUGGINGFACE_ACCESS_TOKEN` | [Quick Start Guide](...) | Module 1 |
 | [Opik](https://rebrand.ly/second-brain-course-opik) | LLM evaluation and prompt monitoring | Free tier (Hosted on Comet - same API Key) | `COMET_API_KEY` | [Quick Start Guide](https://rebrand.ly/second-brain-course-comet-quickstart) | Module 5 |
 | [OpenAI API](https://openai.com/index/openai-api/) | LLM API | Pay-per-use | `OPENAI_API_KEY` | [Quick Start Guide](https://platform.openai.com/docs/quickstart) | Module 6 |
 
@@ -161,15 +184,11 @@ make infrastructure-build
 
 To simulate the course modules, we split the CLI commands and offline ML pipelines you must run per module so you know exactly where you are in the course.
 
+> WIP 👷
+
 ## Module 1: ...
 
-No code to run for this module, as it lays down the overall architecture of the Second Brain AI assistant. 
 
-We recommend to read the [first lesson](https://decodingml.substack.com/p/build-your-second-brain-ai-assistant) to better understand the AI system architecture of the Second Brain AI assistant, where we teach best practices for building production ML systems using MLOps best practices.
-
-## Module 2: ...
-
-...
 
 # 🔧 Utlity Commands
 

@@ -1,4 +1,4 @@
-# Contributing to the Second Brain AI Course
+# Contributing to the PhiloAgents Course
 
 Welcome to one of the most comprehensive open-source courses on Agents 👋
 
