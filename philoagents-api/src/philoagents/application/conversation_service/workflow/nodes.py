@@ -3,15 +3,13 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.prebuilt import ToolNode
 
 from philoagents.application.conversation_service.workflow.chains import (
-    get_philosopher_response_chain,
-    get_conversation_summary_chain,
     get_context_summary_chain,
+    get_conversation_summary_chain,
+    get_philosopher_response_chain,
 )
 from philoagents.application.conversation_service.workflow.state import PhilosopherState
 from philoagents.application.conversation_service.workflow.tools import tools
 from philoagents.config import settings
-
-
 
 retriever_node = ToolNode(tools)
 
@@ -64,4 +62,8 @@ async def summarize_context_node(state: PhilosopherState):
     )
     state["messages"][-1].content = response.content
 
+    return {}
+
+
+async def connector_node(state: PhilosopherState):
     return {}

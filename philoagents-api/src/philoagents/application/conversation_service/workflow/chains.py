@@ -4,10 +4,10 @@ from langchain_groq import ChatGroq
 from philoagents.application.conversation_service.workflow.tools import tools
 from philoagents.config import settings
 from philoagents.domain.prompts import (
+    CONTEXT_SUMMARY_PROMPT,
     EXTEND_SUMMARY_PROMPT,
     PHILOSOPHER_CHARACTER_CARD,
     SUMMARY_PROMPT,
-    CONTEXT_SUMMARY_PROMPT,
 )
 
 
