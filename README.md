@@ -30,7 +30,10 @@ By the end of this course, you'll be able to architect and implement a productio
 
 After completing this course, you'll have access to your own [X], as seen in the video below:
 
-<video src="https://github.com/user-attachments/assets/bfea8e24-6d52-4a33-8857-5d05154ab69e"/></video>
+<video src="https://github.com/user-attachments/assets/8fd6aca7-ae5a-4faf-9c69-3556cb355ce1"/></video>
+
+
+
 
 -------
 
