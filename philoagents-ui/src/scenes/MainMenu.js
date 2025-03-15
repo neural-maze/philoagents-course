@@ -22,7 +22,7 @@ export class MainMenu extends Scene {
         });
 
         this.createButton(centerX, startY + buttonSpacing * 2, 'Support Philoagents', () => {
-            window.open('https://github.com/neural-maze/philoagents', '_blank');
+            window.open('https://github.com/neural-maze/philoagents-course', '_blank');
         });
     }
 
@@ -104,7 +104,7 @@ export class MainMenu extends Scene {
         elements.title = instructionContent.title;
         elements.textElements = instructionContent.textElements;
         
-        const closeElements = this.addCloseButton(centerX, centerY + 70, () => {
+        const closeElements = this.addCloseButton(centerX, centerY + 79, () => {
             this.destroyInstructionElements(elements);
         });
         elements.closeButton = closeElements.button;
@@ -134,7 +134,7 @@ export class MainMenu extends Scene {
     }
     
     addInstructionContent(centerX, centerY, panel) {
-        const title = this.add.text(centerX, centerY - 120, 'INSTRUCTIONS', {
+        const title = this.add.text(centerX, centerY - 110, 'INSTRUCTIONS', {
             fontSize: '28px',
             fontFamily: 'Arial',
             color: '#000000',
@@ -148,7 +148,7 @@ export class MainMenu extends Scene {
         ];
         
         const textElements = [];
-        let yPos = centerY - 70;
+        let yPos = centerY - 59;
         instructions.forEach(instruction => {
             textElements.push(
                 this.add.text(centerX, yPos, instruction, {
