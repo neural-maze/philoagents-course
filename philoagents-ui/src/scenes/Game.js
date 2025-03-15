@@ -116,12 +116,7 @@ export class Game extends Scene
             for (let j = i + 1; j < this.philosophers.length; j++) {
                 this.physics.add.collider(
                     this.philosophers[i].sprite, 
-                    this.philosophers[j].sprite,
-                    () => {
-                        // When philosophers collide, both choose new directions
-                        this.philosophers[i].chooseNewDirection();
-                        this.philosophers[j].chooseNewDirection();
-                    }
+                    this.philosophers[j].sprite
                 );
             }
         }
@@ -320,6 +315,23 @@ export class Game extends Scene
             else if (prevVelocity.x > 0) this.player.setTexture("sophia", "sophia-right");
             else if (prevVelocity.y < 0) this.player.setTexture("sophia", "sophia-back");
             else if (prevVelocity.y > 0) this.player.setTexture("sophia", "sophia-front");
+            else {
+                // If prevVelocity is zero, maintain current direction
+                // Get current texture frame name
+                const currentFrame = this.player.frame.name;
+                
+                // Extract direction from current animation or texture
+                let direction = "front"; // Default
+                
+                // Check if the current frame name contains direction indicators
+                if (currentFrame.includes("left")) direction = "left";
+                else if (currentFrame.includes("right")) direction = "right";
+                else if (currentFrame.includes("back")) direction = "back";
+                else if (currentFrame.includes("front")) direction = "front";
+                
+                // Set the static texture for that direction
+                this.player.setTexture("sophia", `sophia-${direction}`);
+            }
         }
     }
 
