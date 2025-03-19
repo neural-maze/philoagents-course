@@ -34,7 +34,7 @@ Transform static NPCs into dynamic AI personalities that:
 
 After completing this course, you'll have access to your own agentic simulation engine, as seen in the video below:
 
-<video src="https://github.com/user-attachments/assets/8fd6aca7-ae5a-4faf-9c69-3556cb355ce1"/></video>
+<video src="https://github.com/user-attachments/assets/aedc041e-00ed-42ce-99f2-24ce74847e7a"/></video>
 
 -------
 
