@@ -111,7 +111,7 @@ While building the PhiloAgents simulation engine, you'll master:
   - Integration with Groq, MongoDB, Opik
   - Modern Python tooling (uv, ruff)
   - LangChain and LangGraph ecosystems
-  - Leveraging Groq LLMs for high-speed processing
+  - Leveraging LLMs on GroqCloud for high-speed inference
 
 - Applying LLMOps best practices
   - Automated agent evaluation
