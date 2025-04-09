@@ -43,3 +43,6 @@ def create_workflow_graph():
     graph_builder.add_edge("summarize_conversation_node", END)
     
     return graph_builder
+
+# Compiled without a checkpointer. Used for LangGraph Studio
+graph = create_workflow_graph().compile()
