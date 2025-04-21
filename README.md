@@ -169,9 +169,11 @@ Our recommendation for getting the most out of this course:
 3. Set up the code and run it to replicate our results.
 4. Go deeper into the code to understand the details of the implementation.
 
+[Module 1](https://decodingml.substack.com/p/build-your-gaming-simulation-ai-agent)
+
 | Module | Written Lesson | Video Lesson | Description | Running the code |
 |--------|----------------|--------------|-------------|------------------|
-| <div align="center">1</div>  | [Module 1](https://decodingml.substack.com/p/build-your-gaming-simulation-ai-agent) | <a href="https://youtu.be/vbhShB70vFE?si=tK0hRQbEqlZMwFMm"><img src="static/thumbnails/episode_1_play.png" alt="Thumbnail 1" width="400"></a> | Architect your gaming simulation AI PhiloAgent. | **No code** |
+| <div align="center">1</div>  | <a href="https://decodingml.substack.com/p/build-your-gaming-simulation-ai-agent"><img src="static/system_architecture.png" alt="Diagram 1" width="400"></a> | <a href="https://youtu.be/vbhShB70vFE?si=tK0hRQbEqlZMwFMm"><img src="static/thumbnails/episode_1_play.png" alt="Thumbnail 1" width="400"></a> | Architect your gaming simulation AI PhiloAgent. | **No code** |
 | <div align="center">2</div> | [Module 2 ](https://decodingml.substack.com/p/your-first-production-ready-rag-agent) | <a href="https://youtu.be/5fqkdiTP5Xw?si=Y1erl41qNSYlSaYx"><img src="static/thumbnails/episode_2_play.png" alt="Thumbnail 2" width="400"></a> | Building the PhiloAgent in LangGraph using agentic RAG. | [philoagents-api](philoagents-api) |
 | <div align="center">3</div> | [Module 3](https://decodingml.substack.com/p/memory-the-secret-sauce-of-ai-agents) | <a href="https://youtu.be/xDouz4WNHV0?si=t2Wk179LQnSDY1iL"><img src="static/thumbnails/episode_3_play.png" alt="Thumbnail 3" width="400"></a> | Wrapping up our agentic RAG layer by implementing the short-term and long-term memory components. | [philoagents-api](philoagents-api) |
 | <div align="center">4</div> | 🚧 WIP  | 🚧 WIP | Expose the agent as a RESTful API (FastAPI + Websockets). | [philoagents-api](philoagents-api) |
