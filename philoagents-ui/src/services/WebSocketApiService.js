@@ -1,11 +1,30 @@
 class WebSocketApiService {
   constructor() {
-    this.baseUrl = 'ws://localhost:8000';
+    // Initialize connection-related properties
+    this.initializeConnectionProperties();
+    
+    // Set up WebSocket URL based on environment
+    this.baseUrl = this.determineWebSocketBaseUrl();
+  }
+
+  initializeConnectionProperties() {
     this.socket = null;
     this.messageCallbacks = new Map();
     this.connected = false;
     this.connectionPromise = null;
     this.connectionTimeout = 10000;
+  }
+
+  determineWebSocketBaseUrl() {
+    const isHttps = window.location.protocol === 'https:';
+    
+    if (isHttps) {
+      console.log('Using GitHub Codespaces');
+      const currentHostname = window.location.hostname;
+      return `ws://${currentHostname.replace('8080', '8000')}`;
+    }
+    
+    return 'ws://localhost:8000';
   }
 
   connect() {
