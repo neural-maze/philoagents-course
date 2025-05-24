@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from opik.integrations.langchain import OpikTracer
 from pydantic import BaseModel
 
+from philoagents import __version__
 from philoagents.application.conversation_service.generate_response import (
     get_response,
     get_streaming_response,
@@ -12,6 +13,7 @@ from philoagents.application.conversation_service.generate_response import (
 from philoagents.application.conversation_service.reset_conversation import (
     reset_conversation_state,
 )
+from philoagents.config import settings
 from philoagents.domain.philosopher_factory import PhilosopherFactory
 
 from .opik_utils import configure
@@ -29,7 +31,12 @@ async def lifespan(app: FastAPI):
     opik_tracer.flush()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    description=settings.API_DESCRIPTION,
+    title=settings.API_NAME,
+    version=__version__,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -141,4 +148,4 @@ async def reset_conversation():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app=app, host="0.0.0.0", port=8000)
