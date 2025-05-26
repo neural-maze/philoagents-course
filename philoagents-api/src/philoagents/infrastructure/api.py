@@ -1,9 +1,11 @@
+import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
 from opik.integrations.langchain import OpikTracer
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 from philoagents import __version__
 from philoagents.application.conversation_service.generate_response import (
@@ -15,6 +17,7 @@ from philoagents.application.conversation_service.reset_conversation import (
 )
 from philoagents.config import settings
 from philoagents.domain.philosopher_factory import PhilosopherFactory
+from philoagents.infrastructure.middleware import LoggingMiddleware
 
 from .opik_utils import configure
 
@@ -45,15 +48,56 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(LoggingMiddleware)
 
 
 class ChatMessage(BaseModel):
-    message: str
-    philosopher_id: str
+    model_config = ConfigDict(
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
+    )
+
+    message: str = Field(
+        ...,
+        min_length=1,
+        max_length=10000,
+        description="The message content to send to the philosopher",
+    )
+    philosopher_id: str = Field(
+        ...,
+        min_length=1,
+        max_length=100,
+        description="Unique identifier for the philosopher",
+    )
 
 
-@app.post("/chat")
-async def chat(chat_message: ChatMessage):
+class ChatResponse(BaseModel):
+    response: str = Field(..., description="The philosopher's response")
+    philosopher_id: str = Field(..., description="The philosopher who responded")
+    timestamp: float = Field(
+        default_factory=time.time, description="Response timestamp"
+    )
+
+
+class ResetResponse(BaseModel):
+    status: str = Field(..., description="Operation status")
+    message: str = Field(..., description="Operation result message")
+    timestamp: float = Field(default_factory=time.time)
+
+
+class HealthResponse(BaseModel):
+    status: str = Field(..., description="Health status")
+    timestamp: float = Field(default_factory=time.time)
+    version: str = Field(..., description="API version")
+
+
+@app.post("/chat", response_model=ChatResponse, tags=["Chat"])
+async def chat(chat_message: ChatMessage) -> ChatResponse:
+    """
+    Send a message to a philosopher and get a response.
+
+    - **message**: The message to send to the philosopher
+    - **philosopher_id**: The unique identifier of the philosopher
+    """
     try:
         philosopher_factory = PhilosopherFactory()
         philosopher = philosopher_factory.get_philosopher(chat_message.philosopher_id)
@@ -129,8 +173,8 @@ async def websocket_chat(websocket: WebSocket):
         pass
 
 
-@app.post("/reset-memory")
-async def reset_conversation():
+@app.post("/reset-memory", response_model=ResetResponse, tags=["Memory"])
+async def reset_conversation() -> ResetResponse:
     """Resets the conversation state. It deletes the two collections needed for keeping LangGraph state in MongoDB.
 
     Raises:
@@ -139,10 +183,26 @@ async def reset_conversation():
         dict: A dictionary containing the result of the reset operation.
     """
     try:
+        logger.info("Resetting conversation memory...")
         result = await reset_conversation_state()
-        return result
+
+        return ResetResponse(status=result["status"], message=result["message"])
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error resetting conversation state: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to reset conversation state",
+        )
+
+
+@app.get("/health", response_model=HealthResponse, tags=["Health"])
+async def health_check() -> HealthResponse:
+    """Health check endpoint for monitoring and load balancers."""
+    return HealthResponse(
+        status="healthy",
+        version=__version__,
+    )
 
 
 if __name__ == "__main__":
