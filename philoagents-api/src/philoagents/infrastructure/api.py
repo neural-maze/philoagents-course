@@ -92,12 +92,7 @@ class HealthResponse(BaseModel):
 
 @app.post("/chat", response_model=ChatResponse, tags=["Chat"])
 async def chat(chat_message: ChatMessage) -> ChatResponse:
-    """
-    Send a message to a philosopher and get a response.
-
-    - **message**: The message to send to the philosopher
-    - **philosopher_id**: The unique identifier of the philosopher
-    """
+    """Send a message to a philosopher and get a response."""
     try:
         philosopher_factory = PhilosopherFactory()
         philosopher = philosopher_factory.get_philosopher(chat_message.philosopher_id)
@@ -180,7 +175,7 @@ async def reset_conversation() -> ResetResponse:
     Raises:
         HTTPException: If there is an error resetting the conversation state.
     Returns:
-        dict: A dictionary containing the result of the reset operation.
+        ResetResponse: A dictionary containing the result of the reset operation.
     """
     try:
         logger.info("Resetting conversation memory...")
