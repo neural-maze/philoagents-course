@@ -5,7 +5,6 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, stat
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 from opik.integrations.langchain import OpikTracer
-from pydantic import BaseModel, ConfigDict, Field
 
 from philoagents import __version__
 from philoagents.application.conversation_service.generate_response import (
@@ -17,7 +16,13 @@ from philoagents.application.conversation_service.reset_conversation import (
 )
 from philoagents.config import settings
 from philoagents.domain.philosopher_factory import PhilosopherFactory
-from philoagents.infrastructure.middleware import LoggingMiddleware
+from philoagents.infrastructure import (
+    ChatMessage,
+    ChatResponse,
+    HealthResponse,
+    LoggingMiddleware,
+    ResetResponse,
+)
 
 from .opik_utils import configure
 
@@ -51,45 +56,6 @@ app.add_middleware(
 app.add_middleware(LoggingMiddleware)
 
 
-class ChatMessage(BaseModel):
-    model_config = ConfigDict(
-        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
-    )
-
-    message: str = Field(
-        ...,
-        min_length=1,
-        max_length=10000,
-        description="The message content to send to the philosopher",
-    )
-    philosopher_id: str = Field(
-        ...,
-        min_length=1,
-        max_length=100,
-        description="Unique identifier for the philosopher",
-    )
-
-
-class ChatResponse(BaseModel):
-    response: str = Field(..., description="The philosopher's response")
-    philosopher_id: str = Field(..., description="The philosopher who responded")
-    timestamp: float = Field(
-        default_factory=time.time, description="Response timestamp"
-    )
-
-
-class ResetResponse(BaseModel):
-    status: str = Field(..., description="Operation status")
-    message: str = Field(..., description="Operation result message")
-    timestamp: float = Field(default_factory=time.time)
-
-
-class HealthResponse(BaseModel):
-    status: str = Field(..., description="Health status")
-    timestamp: float = Field(default_factory=time.time)
-    version: str = Field(..., description="API version")
-
-
 @app.post("/chat", response_model=ChatResponse, tags=["Chat"])
 async def chat(chat_message: ChatMessage) -> ChatResponse:
     """Send a message to a philosopher and get a response."""
@@ -105,7 +71,9 @@ async def chat(chat_message: ChatMessage) -> ChatResponse:
             philosopher_style=philosopher.style,
             philosopher_context="",
         )
-        return {"response": response}
+
+        return ChatResponse(response=response)
+
     except Exception as e:
         opik_tracer = OpikTracer()
         opik_tracer.flush()
