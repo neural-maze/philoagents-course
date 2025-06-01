@@ -29,7 +29,7 @@ async def conversation_node(state: PhilosopherState, config: RunnableConfig):
         },
         config,
     )
-    
+
     return {"messages": response}
 
 
