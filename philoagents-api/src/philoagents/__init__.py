@@ -7,4 +7,4 @@ try:
 
     __version__ = importlib_metadata.version("philoagents")
 except Exception:
-    __version__ = "unknown"
+    __version__ = "0.0.0"
