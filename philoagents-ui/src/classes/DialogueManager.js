@@ -1,3 +1,11 @@
+// This is the DialogueManager class. It is responsible for managing the dialogue between the user and the philosopher.
+// It is also responsible for handling the text streaming and the cursor blinking.
+// It is also responsible for handling the connection to the WebSocket server.
+// It is also responsible for handling the fallback to the regular API if the WebSocket connection fails.
+// It is also responsible for handling the dialogue flow control.
+// It is also responsible for handling the text streaming.
+// It is also responsible for handling the cursor blinking.
+
 import ApiService from '../services/ApiService';
 import WebSocketApiService from '../services/WebSocketApiService';
 
