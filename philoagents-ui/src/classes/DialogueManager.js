@@ -5,6 +5,7 @@
 // It is also responsible for handling the dialogue flow control.
 // It is also responsible for handling the text streaming.
 // It is also responsible for handling the cursor blinking.
+// This is the DialogueManager class. It is responsible for managing the dialogue between the user and the philosopher.
 
 import ApiService from '../services/ApiService';
 import WebSocketApiService from '../services/WebSocketApiService';
