@@ -161,6 +161,51 @@ philoagents-api/
     └── pyproject.toml         # Project dependencies
 ```
 
+### 💻 Installation for Windows Users (using `make`)
+
+If you are a Windows user and need to use the `make` command, you'll need to install GnuWin32.
+
+#### Step 1: Install GnuWin32
+
+1.  **Download GnuWin32:** Go to the official GnuWin32 website. 
+2.  **Run the installer:** Follow the on-screen instructions to install GnuWin32. The default installation path is typically `C:\Program Files (x86)\GnuWin32`.
+
+#### Step 2: Configure the `PATH`
+
+After installation, you need to temporarily add the GnuWin32 `bin` directory to your system's `PATH` variable for the current terminal session. This allows your terminal to find the `make.exe` executable.
+
+1.  Open **PowerShell** or **Command Prompt**.
+2.  Navigate to the directory where the `Makefile` is located.
+3.  Execute the following command to add GnuWin32 to your `PATH`:
+
+    ```powershell
+    $env:PATH += ";C:\Program Files (x86)\GnuWin32\bin"
+    ```
+
+    **Note:** This command only modifies the `PATH` for the current session. If you close the terminal, you will need to run this command again the next time you want to use `make`.
+
+#### Step 3: Run the `Makefile`
+
+With the `PATH` configured, you can now run the `make` command from the same terminal session.
+
+```bash
+make infrastructure-up
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 🏗️ Set Up Your Local Infrastructure
 
 We use Docker to set up the local infrastructure (Game UI, Agent API, MongoDB).
