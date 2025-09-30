@@ -59,7 +59,7 @@ export class Game extends Scene
 
     createPhilosophers(map, layers) {
         const philosopherConfigs = [
-            { id: "socrates", name: "Socrates", defaultDirection: "right", roamRadius: 800 },
+            { id: "osho", name: "Osho", defaultDirection: "right", roamRadius: 800 },
             { id: "aristotle", name: "Aristotle", defaultDirection: "right", roamRadius: 700 },
             { id: "plato", name: "Plato", defaultDirection: "front", roamRadius: 750 },
             { id: "descartes", name: "Descartes", defaultDirection: "front", roamRadius: 650 },
@@ -69,6 +69,7 @@ export class Game extends Scene
             { id: "searle", name: "Searle", defaultDirection: "front", roamRadius: 730 },
             { id: "chomsky", name: "Chomsky", defaultDirection: "front", roamRadius: 690 },
             { id: "dennett", name: "Dennett", defaultDirection: "front", roamRadius: 710 },
+            { id: "krishnamurti", name: "Krishnamurti", defaultDirection: "left", roamRadius: 760 },
             { 
                 id: "miguel", 
                 name: "Miguel", 

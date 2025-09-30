@@ -57,7 +57,7 @@ To build the town, we have used the following assets:
 
 ## Philosophical Characters
 
-Interact with famous philosophers like Socrates, Aristotle, Plato, and AI thinkers like Turing and Chomsky.
+Interact with famous philosophers like Osho, Aristotle, Plato, and AI thinkers like Turing and Chomsky.
 Every character sprite has been built with the [Universal LPC Spritesheet Generator](https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator/#?body=Body_color_light&head=Human_m)
 
 ![Ada Image](public/assets/sprite_image.png)

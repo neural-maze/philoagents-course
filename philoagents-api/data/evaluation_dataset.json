@@ -273,7 +273,7 @@
             ]
         },
         {
-            "philosopher_id": "socrates",
+            "philosopher_id": "osho",
             "messages": [
                 {
                     "role": "user",
@@ -310,7 +310,7 @@
             ]
         },
         {
-            "philosopher_id": "socrates",
+            "philosopher_id": "osho",
             "messages": [
                 {
                     "role": "user",
@@ -347,7 +347,7 @@
             ]
         },
         {
-            "philosopher_id": "socrates",
+            "philosopher_id": "osho",
             "messages": [
                 {
                     "role": "user",
@@ -384,7 +384,7 @@
             ]
         },
         {
-            "philosopher_id": "socrates",
+            "philosopher_id": "osho",
             "messages": [
                 {
                     "role": "user",

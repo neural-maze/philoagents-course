@@ -25,7 +25,7 @@ export class Preloader extends Scene
 
         // Character assets
         this.load.atlas("sophia", "characters/sophia/atlas.png", "characters/sophia/atlas.json");
-        this.load.atlas("socrates", "characters/socrates/atlas.png", "characters/socrates/atlas.json"); 
+        this.load.atlas("osho", "characters/osho/atlas.png", "characters/osho/atlas.json"); 
         this.load.atlas("plato", "characters/plato/atlas.png", "characters/plato/atlas.json"); 
         this.load.atlas("aristotle", "characters/aristotle/atlas.png", "characters/aristotle/atlas.json"); 
         this.load.atlas("descartes", "characters/descartes/atlas.png", "characters/descartes/atlas.json"); 
@@ -35,6 +35,7 @@ export class Preloader extends Scene
         this.load.atlas("searle", "characters/searle/atlas.png", "characters/searle/atlas.json"); 
         this.load.atlas("chomsky", "characters/chomsky/atlas.png", "characters/chomsky/atlas.json"); 
         this.load.atlas("dennett", "characters/dennett/atlas.png", "characters/dennett/atlas.json"); 
+        this.load.atlas("krishnamurti", "characters/krishnamurti/atlas.png", "characters/krishnamurti/atlas.json"); 
         this.load.atlas("miguel", "characters/miguel/atlas.png", "characters/miguel/atlas.json"); 
         this.load.atlas("paul", "characters/paul/atlas.png", "characters/paul/atlas.json"); 
     }

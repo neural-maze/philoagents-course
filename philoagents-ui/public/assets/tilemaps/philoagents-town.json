@@ -175,7 +175,7 @@
                 {
                  "height":0,
                  "id":277,
-                 "name":"Socrates",
+                 "name":"Osho",
                  "point":true,
                  "rotation":0,
                  "type":"",
@@ -267,6 +267,18 @@
                  "width":0,
                  "x":1173.68913016252,
                  "y":366.159200422966
+                },
+                {
+                 "height":0,
+                 "id":285,
+                 "name":"Krishnamurti",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":850,
+                 "y":600
                 }, 
                 {
                  "height":0,

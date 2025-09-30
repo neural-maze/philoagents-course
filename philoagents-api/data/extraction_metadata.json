@@ -12,9 +12,9 @@
         ]
     },
     {
-        "id": "socrates",
+        "id": "osho",
         "urls": [
-            "https://plato.stanford.edu/entries/socrates/"
+            "https://en.wikipedia.org/wiki/Rajneesh"
         ]
     },
     {
@@ -50,5 +50,11 @@
     {
         "id": "dennett",
         "urls": []
+    },
+    {
+        "id": "krishnamurti",
+        "urls": [
+            "https://en.wikipedia.org/wiki/Jiddu_Krishnamurti"
+        ]
     }
 ]
