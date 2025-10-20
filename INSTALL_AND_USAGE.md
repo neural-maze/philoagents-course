@@ -242,7 +242,7 @@ make create-long-term-memory
 ```
 
 > [!NOTE]
-> To visualize the raw and RAG data from MongoDB, we recommend using [MongoDB Compass](https://rebrand.ly/philoagents-mongodb-compass) or Mongo's official IDE plugin (e.g., `MongoDB for VS Code`). To connect to the working MongoDB instance, use the `MONGODB_URI` value from the `.env` file or found inside the [config.py](philoagents-api/src/philoagents/config.py) file.
+> To visualize the raw and RAG data from MongoDB, we recommend using [MongoDB Compass](https://rebrand.ly/philoagents-mongodb-compass) or Mongo's official IDE plugin (e.g., `MongoDB for VS Code`). To connect to the working MongoDB instance, use the `MONGODB_URI` value from the `.env` file or found inside the [config.py](philoagents-api/src/philoagents/config.py) file. Remember to change local_dev_atlas to localhost in MongoDB Compass connection string mongodb://philoagents:philoagents@local_dev_atlas:27017/?directConnection=true in order for it to be able to connect to the database instance
 
 Next, you can access the game by typing in your browser:
 ```
