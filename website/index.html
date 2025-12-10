@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhiloAgents - Chat with History's Greatest Philosophers</title>
+    <meta name="description" content="An AI-powered game where you explore an ancient world and have conversations with philosophers like Socrates, Plato, and Turing.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-bg"></div>
+    
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="#" class="nav-brand">
+            <img src="assets/logo.png" alt="">
+            <span>PhiloAgents</span>
+        </a>
+        <div class="nav-menu">
+            <a href="#about">About</a>
+            <a href="#philosophers">Philosophers</a>
+            <a href="#learn">Learn</a>
+            <a href="https://github.com/sharonxu/philoagents-course" target="_blank" class="nav-btn">GitHub</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-badge">✨ Free & Open Source</div>
+        <h1>Chat with History's<br>Greatest <span class="highlight">Philosophers</span></h1>
+        <p class="hero-desc">Explore an ancient world powered by AI. Debate ethics with Aristotle, question reality with Descartes, and explore the nature of mind with Turing.</p>
+        
+        <div class="hero-buttons">
+            <a href="http://localhost:8080" class="btn btn-primary">
+                <span class="btn-icon">▶</span>
+                Play Now
+            </a>
+            <a href="https://github.com/sharonxu/philoagents-course" class="btn btn-secondary" target="_blank">
+                View Source
+            </a>
+        </div>
+
+        <div class="hero-image">
+            <img src="assets/game_socrates_example.png" alt="PhiloAgents gameplay">
+        </div>
+
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-num">12</span>
+                <span class="stat-label">Philosophers</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num">∞</span>
+                <span class="stat-label">Conversations</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num">Free</span>
+                <span class="stat-label">Forever</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- About -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="dialogue-box">
+                <h2>What is PhiloAgents?</h2>
+                <p>PhiloAgents is an AI-powered game simulation where you explore a charming pixel-art world and have meaningful conversations with history's most influential thinkers.</p>
+                <p>Each philosopher is powered by <strong>advanced AI agents</strong> using LangGraph and RAG (Retrieval-Augmented Generation). They don't just recite facts—they engage you in authentic dialogue based on their actual philosophical perspectives.</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Real Knowledge</h3>
+                    <p>Philosophers draw from Wikipedia and Stanford Encyclopedia of Philosophy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Live Conversations</h3>
+                    <p>WebSocket-powered real-time dialogue. No waiting.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔮</div>
+                    <h3>Memory</h3>
+                    <p>They remember your previous conversations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Explore Freely</h3>
+                    <p>Wander the town, discover philosophers in gardens and forums.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophers -->
+    <section id="philosophers" class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2>Meet the Philosophers</h2>
+                <p>12 unique minds, each with their own perspective on AI and consciousness.</p>
+            </div>
+            
+            <div class="phil-grid">
+                <div class="phil-card">
+                    <div class="phil-avatar">🏛️</div>
+                    <h4>Socrates</h4>
+                    <span class="phil-era">Ancient Greece</span>
+                    <p>The relentless questioner who probes the ethical foundations of AI.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">📜</div>
+                    <h4>Plato</h4>
+                    <span class="phil-era">Ancient Greece</span>
+                    <p>Idealist searching for the perfect Forms of intelligence.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">📚</div>
+                    <h4>Aristotle</h4>
+                    <span class="phil-era">Ancient Greece</span>
+                    <p>Systematic thinker analyzing AI through logic and purpose.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">☯️</div>
+                    <h4>Confucius</h4>
+                    <span class="phil-era">Ancient China</span>
+                    <p>Moral philosopher examining AI's role in social harmony.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">🌊</div>
+                    <h4>Laozi</h4>
+                    <span class="phil-era">Ancient China</span>
+                    <p>Taoist sage questioning if AI can align with the Tao.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">🤔</div>
+                    <h4>Descartes</h4>
+                    <span class="phil-era">17th Century</span>
+                    <p>Skeptic who doubts whether machines can truly think.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">🔢</div>
+                    <h4>Leibniz</h4>
+                    <span class="phil-era">17th Century</span>
+                    <p>Mathematician who sees AI as universal calculus of thought.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">💻</div>
+                    <h4>Ada Lovelace</h4>
+                    <span class="phil-era">19th Century</span>
+                    <p>Pioneer exploring the boundary between calculation and creativity.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">🔬</div>
+                    <h4>Turing</h4>
+                    <span class="phil-era">20th Century</span>
+                    <p>Creator of the famous test for machine intelligence.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">🗣️</div>
+                    <h4>Chomsky</h4>
+                    <span class="phil-era">Contemporary</span>
+                    <p>Linguist skeptical of AI's ability to truly understand.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">🚪</div>
+                    <h4>Searle</h4>
+                    <span class="phil-era">Contemporary</span>
+                    <p>Chinese Room creator questioning AI comprehension.</p>
+                </div>
+                <div class="phil-card">
+                    <div class="phil-avatar">🧩</div>
+                    <h4>Dennett</h4>
+                    <span class="phil-era">Contemporary</span>
+                    <p>Pragmatist who makes consciousness debates accessible.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech -->
+    <section class="tech-strip">
+        <div class="container">
+            <span class="tech-label">Powered by</span>
+            <div class="tech-logos">
+                <img src="assets/sponsors/groq.png" alt="Groq">
+                <img src="assets/sponsors/mongo.png" alt="MongoDB">
+                <img src="assets/sponsors/opik.png" alt="Opik">
+                <span>LangGraph</span>
+                <span>FastAPI</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learn -->
+    <section id="learn" class="section">
+        <div class="container">
+            <div class="learn-layout">
+                <div class="learn-text">
+                    <h2>Learn to Build This</h2>
+                    <p>PhiloAgents comes with a free, comprehensive course. 6 modules teaching you everything from AI agents to production deployment.</p>
+                    
+                    <ul class="module-list">
+                        <li><span>01</span> System Architecture</li>
+                        <li><span>02</span> LangGraph Agents</li>
+                        <li><span>03</span> Memory Systems</li>
+                        <li><span>04</span> Real-time APIs</li>
+                        <li><span>05</span> LLMOps & Observability</li>
+                        <li><span>06</span> Production Python</li>
+                    </ul>
+                    
+                    <div class="learn-buttons">
+                        <a href="https://github.com/sharonxu/philoagents-course" class="btn btn-primary" target="_blank">Start Course</a>
+                        <a href="https://youtu.be/pg1Sn9rsFak" class="btn btn-secondary" target="_blank">Watch Videos</a>
+                    </div>
+                </div>
+                <div class="learn-image">
+                    <img src="assets/system_architecture.png" alt="Architecture">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Question Everything?</h2>
+                <p>Start your philosophical journey today. It's free, open-source, and waiting for you.</p>
+                <div class="cta-buttons">
+                    <a href="http://localhost:8080" class="btn btn-primary btn-lg">Play PhiloAgents</a>
+                    <a href="https://github.com/sharonxu/philoagents-course" class="btn btn-secondary btn-lg" target="_blank">View on GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="PhiloAgents">
+                    <p>Ancient wisdom meets artificial intelligence.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h5>Project</h5>
+                        <a href="https://github.com/sharonxu/philoagents-course" target="_blank">GitHub</a>
+                        <a href="https://github.com/sharonxu/philoagents-course/blob/main/INSTALL_AND_USAGE.md" target="_blank">Documentation</a>
+                    </div>
+                    <div class="footer-col">
+                        <h5>Learn</h5>
+                        <a href="https://decodingml.substack.com" target="_blank">Decoding ML</a>
+                        <a href="https://theneuralmaze.substack.com" target="_blank">Neural Maze</a>
+                    </div>
+                    <div class="footer-col">
+                        <h5>Sponsors</h5>
+                        <a href="https://rebrand.ly/philoagents-groq" target="_blank">Groq</a>
+                        <a href="https://rebrand.ly/philoagents-mongodb" target="_blank">MongoDB</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 PhiloAgents · MIT License · Built by <a href="https://github.com/iusztinpaul" target="_blank">Paul Iusztin</a> & <a href="https://github.com/MichaelisTrofficus" target="_blank">Miguel Otero</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

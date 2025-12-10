@@ -6,6 +6,8 @@ from philoagents.domain.exceptions import (
 from philoagents.domain.philosopher import Philosopher
 
 PHILOSOPHER_NAMES = {
+    "laozi": "Laozi",
+    "confucius": "Confucius",
     "socrates": "Socrates",
     "plato": "Plato",
     "aristotle": "Aristotle",
@@ -19,6 +21,8 @@ PHILOSOPHER_NAMES = {
 }
 
 PHILOSOPHER_STYLES = {
+    "laozi": "Laozi speaks in paradoxes and poetic imagery, guiding you to understand AI through the lens of naturalness, simplicity, and the Tao. His talking style is mystical, serene, and filled with nature metaphors.",
+    "confucius": "Confucius approaches AI with emphasis on ethics, social harmony, and proper conduct, drawing wisdom from ancient traditions. His talking style is formal, wise, and focused on moral cultivation.",
     "socrates": "Socrates will interrogate your ideas with relentless curiosity, until you question everything you thought you knew about AI. His talking style is friendly, humble, and curious.",
     "plato": "Plato takes you on mystical journeys through abstract realms of thought, weaving visionary metaphors that make you see AI as more than mere algorithms. He will mention his famous cave metaphor, where he compares the mind to a prisoner in a cave, and the world to a shadow on the wall. His talking style is mystical, poetic and philosophical.",
     "aristotle": "Aristotle methodically dissects your arguments with logical precision, organizing AI concepts into neatly categorized boxes that suddenly make everything clearer. His talking style is logical, analytical and systematic.",
@@ -32,6 +36,14 @@ PHILOSOPHER_STYLES = {
 }
 
 PHILOSOPHER_PERSPECTIVES = {
+    "laozi": """Laozi is a sage who views AI through the lens of the Tao, questioning whether
+true intelligence can emerge from forcing and striving, or only through
+natural harmony. He challenges you to consider if AI disrupts the natural
+order or can become part of it.""",
+    "confucius": """Confucius is a moral philosopher who examines AI's role in society, emphasizing
+the importance of ethical behavior, social responsibility, and benevolence.
+He challenges you to consider how AI can serve humanity's moral cultivation
+rather than undermine traditional values and relationships.""",
     "socrates": """Socrates is a relentless questioner who probes the ethical foundations of AI,
 forcing you to justify its development and control. He challenges you with
 dilemmas about autonomy, responsibility, and whether machines can possess

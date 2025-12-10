@@ -59,6 +59,8 @@ export class Game extends Scene
 
     createPhilosophers(map, layers) {
         const philosopherConfigs = [
+            { id: "laozi", name: "Laozi", defaultDirection: "front", roamRadius: 700 },
+            { id: "confucius", name: "Confucius", defaultDirection: "front", roamRadius: 720 },
             { id: "socrates", name: "Socrates", defaultDirection: "right", roamRadius: 800 },
             { id: "aristotle", name: "Aristotle", defaultDirection: "right", roamRadius: 700 },
             { id: "plato", name: "Plato", defaultDirection: "front", roamRadius: 750 },

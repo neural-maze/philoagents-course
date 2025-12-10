@@ -315,6 +315,30 @@
                  "width":0,
                  "x":769.497671343212,
                  "y":114.751046525873
+                }, 
+                {
+                 "height":0,
+                 "id":290,
+                 "name":"Laozi",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":450.0,
+                 "y":750.0
+                }, 
+                {
+                 "height":0,
+                 "id":291,
+                 "name":"Confucius",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":550.0,
+                 "y":750.0
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -323,7 +347,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":292,
+ "nextobjectid":294,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -1,5 +1,17 @@
 [
     {
+        "id": "laozi",
+        "urls": [
+            "https://plato.stanford.edu/entries/laozi/"
+        ]
+    },
+    {
+        "id": "confucius",
+        "urls": [
+            "https://plato.stanford.edu/entries/confucius/"
+        ]
+    },
+    {
         "id": "plato",
         "urls": [
             "https://plato.stanford.edu/entries/plato/"
