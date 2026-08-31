@@ -1,7 +1,7 @@
 <div align="center">
   <h1>PhiloAgents Course</h1>
   <h3>Learn how to build an AI-powered game simulation engine to impersonate popular philosophers.</h3>
-  <p class="tagline">Open-source course by <a href="https://theneuralmaze.substack.com/">The Neural Maze</a> and <a href="https://decodingml.substack.com">Decoding ML</a> in collaboration with </br> <a href="https://rebrand.ly/philoagents-mongodb">MongoDB</a>, <a href="https://rebrand.ly/philoagents-opik">Opik</a> and <a href="https://rebrand.ly/philoagents-groq">Groq</a>.</p>
+  <p class="tagline">Open-source course by <a href="https://theneuralmaze.substack.com/">The Neural Maze</a> and <a href="https://www.decodingai.com">Decoding ML</a> in collaboration with </br> <a href="https://rebrand.ly/philoagents-mongodb">MongoDB</a>, <a href="https://rebrand.ly/philoagents-opik">Opik</a> and <a href="https://rebrand.ly/philoagents-groq">Groq</a>.</p>
 </div>
 
 </br>
@@ -14,7 +14,7 @@
 
 Ever dreamed of building your own AI-powered game? Get ready for an exciting journey where we'll combine the thrill of game development with cutting-edge AI technology!
 
-Welcome to **PhiloAgents** (a team-up between [Decoding ML](https://decodingml.substack.com) and [The Neural Maze](https://theneuralmaze.substack.com)) - where ancient philosophy meets modern AI. In this hands-on course, you'll build an AI agent simulation engine that brings historical philosophers to life in an interactive game environment. Imagine having deep conversations with Plato, debating ethics with Aristotle, or discussing artificial intelligence with Turing himself!
+Welcome to **PhiloAgents** (a team-up between [Decoding ML](https://www.decodingai.com) and [The Neural Maze](https://theneuralmaze.substack.com)) - where ancient philosophy meets modern AI. In this hands-on course, you'll build an AI agent simulation engine that brings historical philosophers to life in an interactive game environment. Imagine having deep conversations with Plato, debating ethics with Aristotle, or discussing artificial intelligence with Turing himself!
 
 **In 6 comprehensive modules**, you'll learn how to:
 - Create AI agents that authentically embody historical philosophers
@@ -62,21 +62,21 @@ After completing this course, you'll have access to your own agentic simulation 
 <table style="border-collapse: collapse; border: none;">
   <tr style="border: none;">
     <td width="20%" style="border: none;">
-      <a href="https://decodingml.substack.com/" aria-label="Decoding ML">
+      <a href="https://www.decodingai.com/" aria-label="Decoding ML">
         <img src="https://github.com/user-attachments/assets/f2f2f9c0-54b7-4ae3-bf8d-23a359c86982" alt="Decoding ML Logo" width="150"/>
       </a>
     </td>
     <td width="80%" style="border: none;">
       <div>
         <h2>📬 Stay Updated</h2>
-        <p><b><a href="https://decodingml.substack.com/">Join Decoding ML</a></b> for proven content on designing, coding, and deploying production-grade AI systems with software engineering and MLOps best practices to help you ship AI applications. Every week, straight to your inbox.</p>
+        <p><b><a href="https://www.decodingai.com/">Join Decoding ML</a></b> for proven content on designing, coding, and deploying production-grade AI systems with software engineering and MLOps best practices to help you ship AI applications. Every week, straight to your inbox.</p>
       </div>
     </td>
   </tr>
 </table>
 
 <p align="center">
-  <a href="https://decodingml.substack.com/">
+  <a href="https://www.decodingai.com/">
     <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe%20Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
   </a>
 </p>
@@ -157,13 +157,13 @@ In Module 5 (optional module), we use OpenAI's API as an LLM-as-a-judge to evalu
 As an open-source course, you don't have to enroll. Everything is self-paced, free of charge, and with its resources freely accessible at (video and articles are complementary - go through both for the whole picture):
 - **code**: this GitHub repository
 - **videos**: [The Neural Maze](https://www.youtube.com/@TheNeuralMaze)
-- **articles**: [Decoding ML](https://decodingml.substack.com)
+- **articles**: [Decoding ML](https://www.decodingai.com)
 
 ## 📚 Course Outline
 
 This **open-source course consists of 6 comprehensive modules** covering theory, system design, and hands-on implementation.
 
-[Read this](https://decodingml.substack.com/p/from-0-to-pro-ai-agents-roadmap) for a quick walkthrough of what you will learn in each module.
+[Read this](https://www.decodingai.com/p/from-0-to-pro-ai-agents-roadmap) for a quick walkthrough of what you will learn in each module.
 
 Our recommendation for getting the most out of this course:
 1. Clone the repository.
@@ -174,13 +174,13 @@ Our recommendation for getting the most out of this course:
 
 | Module | Written Lesson | Video Lesson | Description | Running the code |
 |--------|----------------|--------------|-------------|------------------|
-| <div align="center">0</div>  | <a href="https://decodingml.substack.com/p/from-0-to-pro-ai-agents-roadmap"><img src="static/diagrams/episode_1_play.png" alt="Diagram 0" width="300"></a> | <div align="center">**No Video**</div> | Quick walkthrough over what you will learn in each module. | <div align="center">**No code**</div> |
-| <div align="center">1</div>  | <a href="https://decodingml.substack.com/p/build-your-gaming-simulation-ai-agent"><img src="static/diagrams/episode_1_play.png" alt="Diagram 1" width="300"></a> | <a href="https://youtu.be/vbhShB70vFE?si=tK0hRQbEqlZMwFMm"><img src="static/thumbnails/episode_1_play.png" alt="Thumbnail 1" width="400"></a> | Architect your gaming simulation AI PhiloAgent. | <div align="center">**No code**</div> |
-| <div align="center">2</div> | <a href="https://decodingml.substack.com/p/your-first-production-ready-rag-agent"><img src="static/diagrams/episode_2_play.png" alt="Diagram 2" width="300"></a> | <a href="https://youtu.be/5fqkdiTP5Xw?si=Y1erl41qNSYlSaYx"><img src="static/thumbnails/episode_2_play.png" alt="Thumbnail 2" width="400"></a> | Building the PhiloAgent in LangGraph using agentic RAG. | [philoagents-api](philoagents-api) |
-| <div align="center">3</div> | <a href="https://decodingml.substack.com/p/memory-the-secret-sauce-of-ai-agents"><img src="static/diagrams/episode_3_play.png" alt="Diagram 3" width="300"></a> | <a href="https://youtu.be/xDouz4WNHV0?si=t2Wk179LQnSDY1iL"><img src="static/thumbnails/episode_3_play.png" alt="Thumbnail 3" width="400"></a> | Wrapping up our agentic RAG layer by implementing the short-term and long-term memory components. | [philoagents-api](philoagents-api) |
-| <div align="center">4</div> | <a href="https://decodingml.substack.com/p/deploying-agents-as-real-time-apis"><img src="static/diagrams/episode_4_play.png" alt="Diagram 4" width="300"></a>  | <a href="https://youtu.be/svABzOASrzg?si=nylMpFm0nozPNSbi"><img src="static/thumbnails/episode_4_play.png" alt="Thumbnail 4" width="400"></a> | Expose the agent as a RESTful API (FastAPI + Websockets). | [philoagents-api](philoagents-api) |
-| <div align="center">5</div> | <a href="https://decodingml.substack.com/p/observability-for-rag-agents"><img src="static/diagrams/episode_5_play.png" alt="Diagram 5" width="300"></a>  | <a href="https://youtu.be/Yy0szt5OlNI?si=otYpqM_BY2gxdxnS"><img src="static/thumbnails/episode_5_play.png" alt="Thumbnail 5" width="400"></a> | Observability for RAG agents (part of LLMOps): evaluating agents, prompt monitoring, prompt versioning, etc. | [philoagents-api](philoagents-api) |
-| <div align="center">6</div> | <a href="https://decodingml.substack.com/p/engineer-python-projects-like-a-pro"><img src="static/diagrams/episode_6_play.png" alt="Diagram 6" width="300"></a>   | <div align="center">**No Video**</div> | Structuring Python projects like a PRO. Modern Python tooling. Docker setup. | [philoagents-api](philoagents-api) |
+| <div align="center">0</div>  | <a href="https://www.decodingai.com/p/from-0-to-pro-ai-agents-roadmap"><img src="static/diagrams/episode_1_play.png" alt="Diagram 0" width="300"></a> | <div align="center">**No Video**</div> | Quick walkthrough over what you will learn in each module. | <div align="center">**No code**</div> |
+| <div align="center">1</div>  | <a href="https://www.decodingai.com/p/build-your-gaming-simulation-ai-agent"><img src="static/diagrams/episode_1_play.png" alt="Diagram 1" width="300"></a> | <a href="https://youtu.be/vbhShB70vFE?si=tK0hRQbEqlZMwFMm"><img src="static/thumbnails/episode_1_play.png" alt="Thumbnail 1" width="400"></a> | Architect your gaming simulation AI PhiloAgent. | <div align="center">**No code**</div> |
+| <div align="center">2</div> | <a href="https://www.decodingai.com/p/your-first-production-ready-rag-agent"><img src="static/diagrams/episode_2_play.png" alt="Diagram 2" width="300"></a> | <a href="https://youtu.be/5fqkdiTP5Xw?si=Y1erl41qNSYlSaYx"><img src="static/thumbnails/episode_2_play.png" alt="Thumbnail 2" width="400"></a> | Building the PhiloAgent in LangGraph using agentic RAG. | [philoagents-api](philoagents-api) |
+| <div align="center">3</div> | <a href="https://www.decodingai.com/p/memory-the-secret-sauce-of-ai-agents"><img src="static/diagrams/episode_3_play.png" alt="Diagram 3" width="300"></a> | <a href="https://youtu.be/xDouz4WNHV0?si=t2Wk179LQnSDY1iL"><img src="static/thumbnails/episode_3_play.png" alt="Thumbnail 3" width="400"></a> | Wrapping up our agentic RAG layer by implementing the short-term and long-term memory components. | [philoagents-api](philoagents-api) |
+| <div align="center">4</div> | <a href="https://www.decodingai.com/p/deploying-agents-as-real-time-apis"><img src="static/diagrams/episode_4_play.png" alt="Diagram 4" width="300"></a>  | <a href="https://youtu.be/svABzOASrzg?si=nylMpFm0nozPNSbi"><img src="static/thumbnails/episode_4_play.png" alt="Thumbnail 4" width="400"></a> | Expose the agent as a RESTful API (FastAPI + Websockets). | [philoagents-api](philoagents-api) |
+| <div align="center">5</div> | <a href="https://www.decodingai.com/p/observability-for-rag-agents"><img src="static/diagrams/episode_5_play.png" alt="Diagram 5" width="300"></a>  | <a href="https://youtu.be/Yy0szt5OlNI?si=otYpqM_BY2gxdxnS"><img src="static/thumbnails/episode_5_play.png" alt="Thumbnail 5" width="400"></a> | Observability for RAG agents (part of LLMOps): evaluating agents, prompt monitoring, prompt versioning, etc. | [philoagents-api](philoagents-api) |
+| <div align="center">6</div> | <a href="https://www.decodingai.com/p/engineer-python-projects-like-a-pro"><img src="static/diagrams/episode_6_play.png" alt="Diagram 6" width="300"></a>   | <div align="center">**No Video**</div> | Structuring Python projects like a PRO. Modern Python tooling. Docker setup. | [philoagents-api](philoagents-api) |
 
 And if you're feeling extra brave, there's also a 2h 30m video course where we have merged all the video lessons into one.
 
@@ -217,21 +217,21 @@ And if you're feeling extra brave, there's also a 2h 30m video course where we h
 <table style="border-collapse: collapse; border: none;">
   <tr style="border: none;">
     <td width="20%" style="border: none;">
-      <a href="https://decodingml.substack.com/" aria-label="Decoding ML">
+      <a href="https://www.decodingai.com/" aria-label="Decoding ML">
         <img src="https://github.com/user-attachments/assets/f2f2f9c0-54b7-4ae3-bf8d-23a359c86982" alt="Decoding ML Logo" width="150"/>
       </a>
     </td>
     <td width="80%" style="border: none;">
       <div>
         <h2>📬 Stay Updated</h2>
-        <p><b><a href="https://decodingml.substack.com/">Join Decoding ML</a></b> for proven content on designing, coding, and deploying production-grade AI systems with software engineering and MLOps best practices to help you ship AI applications. Every week, straight to your inbox.</p>
+        <p><b><a href="https://www.decodingai.com/">Join Decoding ML</a></b> for proven content on designing, coding, and deploying production-grade AI systems with software engineering and MLOps best practices to help you ship AI applications. Every week, straight to your inbox.</p>
       </div>
     </td>
   </tr>
 </table>
 
 <p align="center">
-  <a href="https://decodingml.substack.com/">
+  <a href="https://www.decodingai.com/">
     <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe%20Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
   </a>
 </p>
@@ -363,21 +363,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <table style="border-collapse: collapse; border: none;">
   <tr style="border: none;">
     <td width="20%" style="border: none;">
-      <a href="https://decodingml.substack.com/" aria-label="Decoding ML">
+      <a href="https://www.decodingai.com/" aria-label="Decoding ML">
         <img src="https://github.com/user-attachments/assets/f2f2f9c0-54b7-4ae3-bf8d-23a359c86982" alt="Decoding ML Logo" width="150"/>
       </a>
     </td>
     <td width="80%" style="border: none;">
       <div>
         <h2>📬 Stay Updated</h2>
-        <p><b><a href="https://decodingml.substack.com/">Join Decoding ML</a></b> for proven content on designing, coding, and deploying production-grade AI systems with software engineering and MLOps best practices to help you ship AI applications. Every week, straight to your inbox.</p>
+        <p><b><a href="https://www.decodingai.com/">Join Decoding ML</a></b> for proven content on designing, coding, and deploying production-grade AI systems with software engineering and MLOps best practices to help you ship AI applications. Every week, straight to your inbox.</p>
       </div>
     </td>
   </tr>
 </table>
 
 <p align="center">
-  <a href="https://decodingml.substack.com/">
+  <a href="https://www.decodingai.com/">
     <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe%20Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
   </a>
 </p>

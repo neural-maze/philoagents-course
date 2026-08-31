@@ -1,11 +1,19 @@
 from typing import Generator
 
+import wikipedia
 from langchain_community.document_loaders import WebBaseLoader, WikipediaLoader
 from langchain_core.documents import Document
 from tqdm import tqdm
 
 from philoagents.domain.philosopher import Philosopher, PhilosopherExtract
 from philoagents.domain.philosopher_factory import PhilosopherFactory
+
+# Wikipedia now rejects requests with the `wikipedia` package's default,
+# generic User-Agent (see https://phabricator.wikimedia.org/T400119).
+# Set a descriptive one so calls aren't blocked with HTTP 403.
+wikipedia.set_user_agent(
+    "philoagents-course/1.0 (https://github.com/neural-maze/philoagents-course)"
+)
 
 
 def get_extraction_generator(
