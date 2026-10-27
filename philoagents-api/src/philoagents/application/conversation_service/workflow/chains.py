@@ -1,42 +1,35 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 
-from philoagents.application.conversation_service.workflow.tools import tools
+from philoagents.application.conversation_service.workflow.tools import get_tools
 from philoagents.config import settings
 from philoagents.domain.prompts import (
     CONTEXT_SUMMARY_PROMPT,
     EXTEND_SUMMARY_PROMPT,
-    PHILOSOPHER_CHARACTER_CARD,
     SUMMARY_PROMPT,
+    get_philosopher_prompt,
 )
 
 
-def get_chat_model(temperature: float = 0.7, model_name: str = settings.GROQ_LLM_MODEL) -> ChatGroq:
-    return ChatGroq(
-        api_key=settings.GROQ_API_KEY,
-        model_name=model_name,
+def get_chat_model(temperature: float = 0.7) -> ChatOpenAI:
+    if not settings.QWEN_API_KEY:
+        raise RuntimeError("QWEN_API_KEY is not set. The philosopher cannot answer.")
+
+    return ChatOpenAI(
+        api_key=settings.QWEN_API_KEY,
+        base_url=settings.QWEN_BASE_URL,
+        model=settings.QWEN_MODEL,
         temperature=temperature,
+        extra_body={"enable_thinking": False},
     )
 
 
 def get_philosopher_response_chain():
-    model = get_chat_model()
-    model = model.bind_tools(tools)
-    system_message = PHILOSOPHER_CHARACTER_CARD
-
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", system_message.prompt),
-            MessagesPlaceholder(variable_name="messages"),
-        ],
-        template_format="jinja2",
-    )
-
-    return prompt | model
+    return get_philosopher_prompt() | get_chat_model().bind_tools(get_tools())
 
 
 def get_conversation_summary_chain(summary: str = ""):
-    model = get_chat_model(model_name=settings.GROQ_LLM_MODEL_SUMMARY)
+    model = get_chat_model()
 
     summary_message = EXTEND_SUMMARY_PROMPT if summary else SUMMARY_PROMPT
 
@@ -52,7 +45,7 @@ def get_conversation_summary_chain(summary: str = ""):
 
 
 def get_context_summary_chain():
-    model = get_chat_model(model_name=settings.GROQ_LLM_MODEL_CONTEXT_SUMMARY)
+    model = get_chat_model()
     prompt = ChatPromptTemplate.from_messages(
         [
             ("human", CONTEXT_SUMMARY_PROMPT.prompt),

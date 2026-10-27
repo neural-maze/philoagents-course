@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { t } from '../i18n';
 import ApiService from '../services/ApiService';
 
 export class PauseMenu extends Scene {
@@ -20,7 +21,7 @@ export class PauseMenu extends Scene {
         panel.lineStyle(4, 0x000000, 1);
         panel.strokeRoundedRect(centerX - 200, centerY - 150, 400, 300, 20);
 
-        this.add.text(centerX, centerY - 120, 'GAME PAUSED', {
+        this.add.text(centerX, centerY - 120, t('paused'), {
             fontSize: '28px',
             fontFamily: 'Arial',
             color: '#000000',
@@ -30,15 +31,15 @@ export class PauseMenu extends Scene {
         const buttonY = centerY - 50;
         const buttonSpacing = 70;
 
-        this.createButton(centerX, buttonY, 'Resume Game', () => {
+        this.createButton(centerX, buttonY, t('resume'), () => {
             this.resumeGame();
         });
 
-        this.createButton(centerX, buttonY + buttonSpacing, 'Main Menu', () => {
+        this.createButton(centerX, buttonY + buttonSpacing, t('mainMenu'), () => {
             this.returnToMainMenu();
         });
 
-        this.createButton(centerX, buttonY + buttonSpacing * 2, 'Reset Game', () => {
+        this.createButton(centerX, buttonY + buttonSpacing * 2, t('reset'), () => {
             this.resetGame();
         });
 
@@ -119,7 +120,7 @@ export class PauseMenu extends Scene {
             const centerX = this.cameras.main.width / 2;
             const centerY = this.cameras.main.height / 2 + 120;
             
-            const errorText = this.add.text(centerX, centerY, 'Failed to reset game. Try again.', {
+            const errorText = this.add.text(centerX, centerY, t('resetFailed'), {
                 fontSize: '16px',
                 fontFamily: 'Arial',
                 color: '#FF0000'

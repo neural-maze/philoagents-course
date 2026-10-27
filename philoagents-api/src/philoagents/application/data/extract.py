@@ -3,7 +3,6 @@ from typing import Generator
 from langchain_community.document_loaders import WebBaseLoader, WikipediaLoader
 from langchain_core.documents import Document
 from tqdm import tqdm
-
 from philoagents.domain.philosopher import Philosopher, PhilosopherExtract
 from philoagents.domain.philosopher_factory import PhilosopherFactory
 
@@ -55,7 +54,9 @@ def extract(philosopher: Philosopher, extract_urls: list[str]) -> list[Document]
     docs = []
 
     docs.extend(extract_wikipedia(philosopher))
-    docs.extend(extract_stanford_encyclopedia_of_philosophy(philosopher, extract_urls))
+
+    # 暂时跳过 Stanford 哲学百科
+    ##docs.extend(extract_stanford_encyclopedia_of_philosophy(philosopher, extract_urls))
 
     return docs
 
@@ -70,13 +71,30 @@ def extract_wikipedia(philosopher: Philosopher) -> list[Document]:
         list[Document]: List of documents extracted from Wikipedia for the philosopher.
     """
 
+    
     loader = WikipediaLoader(
         query=philosopher.name,
         lang="en",
         load_max_docs=1,
         doc_content_chars_max=1000000,
     )
+
+    # 修复旧版 Wikipedia 库的 HTTP 请求问题
+    import importlib
+
+    wiki = importlib.import_module("wikipedia.wikipedia")
+    wiki.API_URL = "https://en.wikipedia.org/w/api.php"
+    wiki.set_user_agent(
+        "PhiloAgentsLocal/1.0 "
+        "(https://github.com/neural-maze/philoagents-course)"
+    )
+
     docs = loader.load()
+
+
+    
+
+    
 
     for doc in docs:
         doc.metadata["philosopher_id"] = philosopher.id

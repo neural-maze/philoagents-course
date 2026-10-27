@@ -3,6 +3,7 @@ class Character {
     this.scene = scene;
     this.id = config.id;
     this.name = config.name;
+    this.displayName = config.displayName;
     this.spawnPoint = config.spawnPoint;
     this.atlas = config.atlas;
     this.defaultFrame = `${this.id}-${config.defaultDirection || 'front'}`;
@@ -258,7 +259,7 @@ class Character {
   }
 
   createNameLabel() {
-    this.nameLabel = this.scene.add.text(0, 0, this.name, {
+    this.nameLabel = this.scene.add.text(0, 0, this.displayName, {
       font: "14px Arial",
       fill: "#ffffff",
       backgroundColor: "#000000",

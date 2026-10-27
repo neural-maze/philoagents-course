@@ -28,7 +28,7 @@ Transform static NPCs into dynamic AI personalities that:
 - Design production-ready agentic RAG systems.
 - Ship the agent as a RESTful API.
 - Apply LLMOps and software engineering best practices.
-- Use industry tools: Groq, MongoDB, Opik, LangGraph, LangChain, FastAPI, Websockets, Docker, etc.
+- Use industry tools: Qwen (DashScope), MongoDB, Opik, LangGraph, LangChain, FastAPI, Websockets, Docker, etc. (the original course used Groq; see INSTALL_AND_USAGE.md)
 
 After completing this course, you'll have access to your own agentic simulation engine, as seen in the video below:
 

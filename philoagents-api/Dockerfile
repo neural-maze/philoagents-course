@@ -13,5 +13,6 @@ RUN uv sync --frozen --no-cache
 # Copy the application into the container.
 COPY src/philoagents philoagents/
 COPY tools tools/
+COPY scripts scripts/
 
 CMD ["/app/.venv/bin/fastapi", "run", "philoagents/infrastructure/api.py", "--port", "8000", "--host", "0.0.0.0"]

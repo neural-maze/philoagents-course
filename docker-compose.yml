@@ -10,6 +10,12 @@ services:
     volumes:
       - data:/data/db
       - config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
     networks:
       - philoagents-network
   api:
@@ -18,11 +24,16 @@ services:
       context: ./philoagents-api
       dockerfile: Dockerfile
     environment:
-      - MONGODB_URI=mongodb://philoagents:philoagents@local_dev_atlas:27017/?directConnection=true
+      - MONGO_URI=mongodb://philoagents:philoagents@local_dev_atlas:27017/?directConnection=true
     ports:
       - "8000:8000"
     env_file:
       - ./philoagents-api/.env
+    volumes:
+      - ./philoagents-api/data:/app/data
+    depends_on:
+      local_dev_atlas:
+        condition: service_healthy
     networks:
       - philoagents-network
   ui:
@@ -31,7 +42,9 @@ services:
       context: ./philoagents-ui
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      # Host 8080 was taken by another app; the container still serves 8080.
+      # Whatever you map this to must appear in the API's CORS_ORIGINS.
+      - "8088:8080"
     volumes:
       - ./philoagents-ui:/app
       - /app/node_modules

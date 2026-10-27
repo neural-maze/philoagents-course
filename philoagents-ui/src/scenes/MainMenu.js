@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-
+import { t, toggleLanguage } from '../i18n';
 export class MainMenu extends Scene {
     constructor() {
         super('MainMenu');
@@ -10,20 +10,39 @@ export class MainMenu extends Scene {
         this.add.image(510, 260, 'logo').setScale(0.55);
 
         const centerX = this.cameras.main.width / 2;
-        const startY = 524;
-        const buttonSpacing = 70;
+        const startY = 470;
+        const buttonSpacing = 65;
 
-        this.createButton(centerX, startY, 'Let\'s Play!', () => {
-            this.scene.start('Game');
-        });
+        
+    this.createButton(centerX, startY, t('play'), () => {
+        this.scene.start('Game');
+    });
 
-        this.createButton(centerX, startY + buttonSpacing, 'Instructions', () => {
+    this.createButton(
+        centerX, startY + buttonSpacing,
+        t('instructions'), () => {
             this.showInstructions();
-        });
+        }
+    );
 
-        this.createButton(centerX, startY + buttonSpacing * 2, 'Support Philoagents', () => {
-            window.open('https://github.com/neural-maze/philoagents-course', '_blank');
-        });
+    this.createButton(
+        centerX, startY + buttonSpacing * 2,
+        t('support'), () => {
+            window.open(
+                'https://github.com/neural-maze/philoagents-course',
+                '_blank'
+            );
+        }
+    );
+
+    this.createButton(
+        centerX, startY + buttonSpacing * 3,
+        t('language'), () => {
+            toggleLanguage();
+            this.scene.restart();
+        }
+    );
+
     }
 
     createButton(x, y, text, callback) {
@@ -134,7 +153,7 @@ export class MainMenu extends Scene {
     }
     
     addInstructionContent(centerX, centerY, panel) {
-        const title = this.add.text(centerX, centerY - 110, 'INSTRUCTIONS', {
+        const title = this.add.text(centerX, centerY - 110, t('instructions'), {
             fontSize: '28px',
             fontFamily: 'Arial',
             color: '#000000',
@@ -142,9 +161,9 @@ export class MainMenu extends Scene {
         }).setOrigin(0.5);
         
         const instructions = [
-            'Arrow keys for moving',
-            'SPACE for talking to philosophers',
-            'ESC for closing the dialogue'
+        t('move'),
+        t('talk'),
+        t('closeDialogue')
         ];
         
         const textElements = [];
@@ -176,7 +195,7 @@ export class MainMenu extends Scene {
         closeButton.lineStyle(2, 0x000000, 1);
         closeButton.strokeRoundedRect(x - buttonWidth / 2, adjustedY - buttonHeight / 2, buttonWidth, buttonHeight, cornerRadius);
         
-        const closeText = this.add.text(x, adjustedY, 'Close', {
+        const closeText = this.add.text(x, adjustedY, t('close'), {
             fontSize: '20px',
             fontFamily: 'Arial',
             color: '#000000',

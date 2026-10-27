@@ -1,8 +1,10 @@
 import uuid
+from contextlib import AsyncExitStack
 from typing import Any, AsyncGenerator, Union
 
 from langchain_core.messages import AIMessage, AIMessageChunk, HumanMessage
 from langgraph.checkpoint.mongodb.aio import AsyncMongoDBSaver
+from loguru import logger
 from opik.integrations.langchain import OpikTracer
 
 from philoagents.application.conversation_service.workflow.graph import (
@@ -10,6 +12,54 @@ from philoagents.application.conversation_service.workflow.graph import (
 )
 from philoagents.application.conversation_service.workflow.state import PhilosopherState
 from philoagents.config import settings
+from philoagents.infrastructure.opik_utils import tracing_enabled
+
+_stack: AsyncExitStack | None = None
+_graph = None
+_tracing_callbacks: list = []
+
+
+async def get_compiled_graph():
+    """Build the checkpointer and the compiled graph once per process.
+
+    Both used to be created inside every request, which meant a fresh Mongo connection
+    and a full graph compile per player message.
+    """
+    global _stack, _graph
+
+    if _graph is not None:
+        return _graph
+
+    stack = AsyncExitStack()
+    checkpointer = await stack.enter_async_context(
+        AsyncMongoDBSaver.from_conn_string(
+            conn_string=settings.MONGO_URI,
+            db_name=settings.MONGO_DB_NAME,
+            checkpoint_collection_name=settings.MONGO_STATE_CHECKPOINT_COLLECTION,
+            writes_collection_name=settings.MONGO_STATE_WRITES_COLLECTION,
+        )
+    )
+
+    graph = create_workflow_graph().compile(checkpointer=checkpointer)
+    if tracing_enabled():
+        _tracing_callbacks.append(OpikTracer(graph=graph.get_graph(xray=True)))
+
+    _stack, _graph = stack, graph
+    logger.info("Conversation workflow compiled and cached")
+    return _graph
+
+
+async def shutdown_workflow_graph() -> None:
+    global _stack, _graph
+
+    if _stack is not None:
+        await _stack.aclose()
+    _stack, _graph = None, None
+    _tracing_callbacks.clear()
+
+
+def _thread_config(thread_id: str) -> dict:
+    return {"configurable": {"thread_id": thread_id}, "callbacks": _tracing_callbacks}
 
 
 async def get_response(
@@ -20,6 +70,7 @@ async def get_response(
     philosopher_style: str,
     philosopher_context: str,
     new_thread: bool = False,
+    player_id:str="local",
 ) -> tuple[str, PhilosopherState]:
     """Run a conversation through the workflow graph.
 
@@ -40,35 +91,22 @@ async def get_response(
         RuntimeError: If there's an error running the conversation workflow.
     """
 
-    graph_builder = create_workflow_graph()
-
     try:
-        async with AsyncMongoDBSaver.from_conn_string(
-            conn_string=settings.MONGO_URI,
-            db_name=settings.MONGO_DB_NAME,
-            checkpoint_collection_name=settings.MONGO_STATE_CHECKPOINT_COLLECTION,
-            writes_collection_name=settings.MONGO_STATE_WRITES_COLLECTION,
-        ) as checkpointer:
-            graph = graph_builder.compile(checkpointer=checkpointer)
-            opik_tracer = OpikTracer(graph=graph.get_graph(xray=True))
+        graph = await get_compiled_graph()
 
-            thread_id = (
-                philosopher_id if not new_thread else f"{philosopher_id}-{uuid.uuid4()}"
-            )
-            config = {
-                "configurable": {"thread_id": thread_id},
-                "callbacks": [opik_tracer],
-            }
-            output_state = await graph.ainvoke(
-                input={
-                    "messages": __format_messages(messages=messages),
-                    "philosopher_name": philosopher_name,
-                    "philosopher_perspective": philosopher_perspective,
-                    "philosopher_style": philosopher_style,
-                    "philosopher_context": philosopher_context,
-                },
-                config=config,
-            )
+        output_state = await graph.ainvoke(
+            input={
+                "messages": __format_messages(messages=messages),
+                "philosopher_name": philosopher_name,
+                "philosopher_perspective": philosopher_perspective,
+                "philosopher_style": philosopher_style,
+                "philosopher_context": philosopher_context,
+            },
+            config=_thread_config(
+                _thread_id(player_id, philosopher_id, new_thread)
+            ),
+        )
+
         last_message = output_state["messages"][-1]
         return last_message.content, PhilosopherState(**output_state)
     except Exception as e:
@@ -83,6 +121,7 @@ async def get_streaming_response(
     philosopher_style: str,
     philosopher_context: str,
     new_thread: bool = False,
+    player_id:str="local",
 ) -> AsyncGenerator[str, None]:
     """Run a conversation through the workflow graph with streaming response.
 
@@ -101,46 +140,38 @@ async def get_streaming_response(
     Raises:
         RuntimeError: If there's an error running the conversation workflow.
     """
-    graph_builder = create_workflow_graph()
-
     try:
-        async with AsyncMongoDBSaver.from_conn_string(
-            conn_string=settings.MONGO_URI,
-            db_name=settings.MONGO_DB_NAME,
-            checkpoint_collection_name=settings.MONGO_STATE_CHECKPOINT_COLLECTION,
-            writes_collection_name=settings.MONGO_STATE_WRITES_COLLECTION,
-        ) as checkpointer:
-            graph = graph_builder.compile(checkpointer=checkpointer)
-            opik_tracer = OpikTracer(graph=graph.get_graph(xray=True))
+        graph = await get_compiled_graph()
 
-            thread_id = (
-                philosopher_id if not new_thread else f"{philosopher_id}-{uuid.uuid4()}"
-            )
-            config = {
-                "configurable": {"thread_id": thread_id},
-                "callbacks": [opik_tracer],
-            }
-
-            async for chunk in graph.astream(
-                input={
-                    "messages": __format_messages(messages=messages),
-                    "philosopher_name": philosopher_name,
-                    "philosopher_perspective": philosopher_perspective,
-                    "philosopher_style": philosopher_style,
-                    "philosopher_context": philosopher_context,
-                },
-                config=config,
-                stream_mode="messages",
+        async for chunk in graph.astream(
+            input={
+                "messages": __format_messages(messages=messages),
+                "philosopher_name": philosopher_name,
+                "philosopher_perspective": philosopher_perspective,
+                "philosopher_style": philosopher_style,
+                "philosopher_context": philosopher_context,
+            },
+            config=_thread_config(
+                _thread_id(player_id, philosopher_id, new_thread)
+            ),
+            stream_mode="messages",
+        ):
+            if chunk[1]["langgraph_node"] == "conversation_node" and isinstance(
+                chunk[0], AIMessageChunk
             ):
-                if chunk[1]["langgraph_node"] == "conversation_node" and isinstance(
-                    chunk[0], AIMessageChunk
-                ):
-                    yield chunk[0].content
+                yield chunk[0].content
 
     except Exception as e:
         raise RuntimeError(
             f"Error running streaming conversation workflow: {str(e)}"
         ) from e
+
+
+def _thread_id(player_id: str, philosopher_id: str, new_thread: bool) -> str:
+    base_thread_id = f"{player_id}:{philosopher_id}"
+    if not new_thread:
+        return base_thread_id
+    return f"{base_thread_id}:{uuid.uuid4()}"
 
 
 def __format_messages(

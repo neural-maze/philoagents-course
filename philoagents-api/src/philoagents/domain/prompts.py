@@ -1,4 +1,5 @@
 import opik
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from loguru import logger
 
 
@@ -70,6 +71,32 @@ PHILOSOPHER_CHARACTER_CARD = Prompt(
     name="philosopher_character_card",
     prompt=__PHILOSOPHER_CHARACTER_CARD,
 )
+
+# Appended in code instead of inside the card: the Opik-managed version of the card
+# would otherwise shadow any local change to it.
+REPLY_IN_USER_LANGUAGE = """
+
+Reply in the language of the user's latest message. If the user writes Chinese, use
+Simplified Chinese. If the user writes English, use English. Remain in character and
+keep game dialogue concise.
+"""
+
+
+def get_philosopher_prompt() -> ChatPromptTemplate:
+    """The prompt every philosopher turn is built from.
+
+    The MessagesPlaceholder is what carries the player's message and the conversation
+    history into the model. Without it the character card is the only input, and every
+    reply ignores the question.
+    """
+    return ChatPromptTemplate.from_messages(
+        [
+            ("system", PHILOSOPHER_CHARACTER_CARD.prompt + REPLY_IN_USER_LANGUAGE),
+            MessagesPlaceholder(variable_name="messages"),
+        ],
+        template_format="jinja2",
+    )
+
 
 # --- Summary ---
 

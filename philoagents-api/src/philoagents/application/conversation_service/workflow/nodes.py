@@ -8,10 +8,12 @@ from philoagents.application.conversation_service.workflow.chains import (
     get_philosopher_response_chain,
 )
 from philoagents.application.conversation_service.workflow.state import PhilosopherState
-from philoagents.application.conversation_service.workflow.tools import tools
+from philoagents.application.conversation_service.workflow.tools import get_tools
 from philoagents.config import settings
 
-retriever_node = ToolNode(tools)
+
+def get_retriever_node() -> ToolNode:
+    return ToolNode(get_tools())
 
 
 async def conversation_node(state: PhilosopherState, config: RunnableConfig):
@@ -29,7 +31,7 @@ async def conversation_node(state: PhilosopherState, config: RunnableConfig):
         },
         config,
     )
-    
+
     return {"messages": response}
 
 

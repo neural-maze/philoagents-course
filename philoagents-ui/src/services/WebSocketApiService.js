@@ -1,10 +1,12 @@
+import { wsBaseUrl } from './apiBase';
+import { authFrame, forgetSession } from './session';
 class WebSocketApiService {
   constructor() {
     // Initialize connection-related properties
     this.initializeConnectionProperties();
     
     // Set up WebSocket URL based on environment
-    this.baseUrl = this.determineWebSocketBaseUrl();
+    this.baseUrl = wsBaseUrl();
   }
 
   initializeConnectionProperties() {
@@ -15,24 +17,20 @@ class WebSocketApiService {
     this.connectionTimeout = 10000;
   }
 
-  determineWebSocketBaseUrl() {
-    const isHttps = window.location.protocol === 'https:';
-    
-    if (isHttps) {
-      console.log('Using GitHub Codespaces');
-      const currentHostname = window.location.hostname;
-      return `ws://${currentHostname.replace('8080', '8000')}`;
-    }
-    
-    return 'ws://localhost:8000';
-  }
-
   connect() {
     if (this.connectionPromise) {
       return this.connectionPromise;
     }
 
-    this.connectionPromise = new Promise((resolve, reject) => {
+    // The token is fetched before the socket opens so onopen can send it immediately;
+    // anything queued behind it would otherwise be rejected as an unauthenticated turn.
+    this.connectionPromise = authFrame().then((frame) => this.openSocket(frame));
+
+    return this.connectionPromise;
+  }
+
+  openSocket(frame) {
+    return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
         if (this.socket) {
           this.socket.close();
@@ -44,6 +42,7 @@ class WebSocketApiService {
       this.socket = new WebSocket(`${this.baseUrl}/ws/chat`);
       
       this.socket.onopen = () => {
+        this.socket.send(frame);
         console.log('WebSocket connection established');
         this.connected = true;
         clearTimeout(timeoutId);
@@ -59,14 +58,16 @@ class WebSocketApiService {
         reject(error);
       };
 
-      this.socket.onclose = () => {
+      this.socket.onclose = (event) => {
         console.log('WebSocket connection closed');
         this.connected = false;
         this.connectionPromise = null;
+        if (event.code === 4401) {
+          // The server refused our token, so drop it and let the next send mint a new one.
+          forgetSession();
+        }
       };
     });
-
-    return this.connectionPromise;
   }
 
   handleMessage(event) {
@@ -158,4 +159,4 @@ class WebSocketApiService {
   }
 }
 
-export default new WebSocketApiService(); 
+export default new WebSocketApiService();

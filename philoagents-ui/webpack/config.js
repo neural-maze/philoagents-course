@@ -30,6 +30,12 @@ module.exports = {
             }
         ]
     },
+    devServer: {
+        host: "0.0.0.0",
+        // compose publishes this container on another host port, so let the HMR client
+        // derive its socket URL from the page it was served from instead of baking in 8080.
+        client: {webSocketURL: "auto://0.0.0.0:0/ws"}
+    },
     plugins: [
         new CleanWebpackPlugin({
             cleanOnceBeforeBuildPatterns: [path.join(__dirname, "dist/**/*")]

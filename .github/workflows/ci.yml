@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: philoagents-api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-caching: true
+      - run: uv sync --frozen
+      - run: uv run ruff check src tests scripts tools
+      - run: uv run pytest -q
+
+  api-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build philoagents-api
+
+  ui:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: philoagents-ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: philoagents-ui/package-lock.json
+      - run: npm ci
+      - run: npm run build-nolog

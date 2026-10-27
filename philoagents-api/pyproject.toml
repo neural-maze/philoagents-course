@@ -9,6 +9,7 @@ dependencies = [
     "fastapi[standard]>=0.115.8",
     "langchain-core>=0.3.34",
     "langchain-groq>=0.2.4",
+    "langchain-openai>=0.3.0,<0.4",
     "langchain-mongodb>=0.4.0",
     "langgraph>=0.2.70",
     "langgraph-checkpoint-mongodb>=0.1.0",
@@ -43,3 +44,11 @@ packages = ["src/philoagents"]
 
 [tool.ruff]
 target-version = "py312"
+
+# Pinned so an upgraded ruff cannot turn CI red on rules the code never had to satisfy.
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

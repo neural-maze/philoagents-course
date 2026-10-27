@@ -1,53 +1,31 @@
+import re
+
 from loguru import logger
-from pymongo import MongoClient
 
 from philoagents.config import settings
+from philoagents.infrastructure.mongo.database import get_database
 
 
-async def reset_conversation_state() -> dict:
-    """Deletes all conversation state data from MongoDB.
+def reset_conversation_state(player_id: str) -> dict:
+    """Delete one player's LangGraph conversation state.
 
-    This function removes all stored conversation checkpoints and writes,
-    effectively resetting all philosopher conversations.
+    Scoped by the thread_id prefix on purpose: the old implementation dropped the whole
+    collection, so any player pressing reset erased every other player's memory.
 
     Returns:
-        dict: Status message indicating success or failure with details
-              about which collections were deleted
-
-    Raises:
-        Exception: If there's an error connecting to MongoDB or deleting collections
+        dict: the player and how many documents each collection lost.
     """
-    try:
-        client = MongoClient(settings.MONGO_URI)
-        db = client[settings.MONGO_DB_NAME]
+    db = get_database()
+    # player_id is client supplied, so anchor it and escape it before it reaches $regex.
+    thread_filter = {"thread_id": {"$regex": f"^{re.escape(player_id)}:"}}
 
-        collections_deleted = []
+    deleted = {}
+    for name in (
+        settings.MONGO_STATE_CHECKPOINT_COLLECTION,
+        settings.MONGO_STATE_WRITES_COLLECTION,
+    ):
+        count = db[name].delete_many(thread_filter).deleted_count
+        deleted[name] = count
+        logger.info(f"Reset player {player_id}: removed {count} documents from {name}")
 
-        if settings.MONGO_STATE_CHECKPOINT_COLLECTION in db.list_collection_names():
-            db.drop_collection(settings.MONGO_STATE_CHECKPOINT_COLLECTION)
-            collections_deleted.append(settings.MONGO_STATE_CHECKPOINT_COLLECTION)
-            logger.info(
-                f"Deleted collection: {settings.MONGO_STATE_CHECKPOINT_COLLECTION}"
-            )
-
-        if settings.MONGO_STATE_WRITES_COLLECTION in db.list_collection_names():
-            db.drop_collection(settings.MONGO_STATE_WRITES_COLLECTION)
-            collections_deleted.append(settings.MONGO_STATE_WRITES_COLLECTION)
-            logger.info(f"Deleted collection: {settings.MONGO_STATE_WRITES_COLLECTION}")
-
-        client.close()
-
-        if collections_deleted:
-            return {
-                "status": "success",
-                "message": f"Successfully deleted collections: {', '.join(collections_deleted)}",
-            }
-        else:
-            return {
-                "status": "success",
-                "message": "No collections needed to be deleted",
-            }
-
-    except Exception as e:
-        logger.error(f"Failed to reset conversation state: {str(e)}")
-        raise Exception(f"Failed to reset conversation state: {str(e)}")
+    return {"status": "success", "player_id": player_id, "deleted": deleted}

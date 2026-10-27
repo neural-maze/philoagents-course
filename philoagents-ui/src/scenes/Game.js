@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import Character from '../classes/Character';
 import DialogueBox from '../classes/DialogueBox';
 import DialogueManager from '../classes/DialogueManager';
+import { philosopherName } from '../i18n';
 
 export class Game extends Scene
 {
@@ -34,7 +35,7 @@ export class Game extends Scene
 
         this.setupControls(camera);
 
-        this.setupDialogueSystem();
+        
 
         this.dialogueBox = new DialogueBox(this);
         this.dialogueText = this.add
@@ -93,6 +94,7 @@ export class Game extends Scene
             this[config.id] = new Character(this, {
                 id: config.id,
                 name: config.name,
+                displayName: philosopherName(config.id, config.name),
                 spawnPoint: spawnPoint,
                 atlas: config.id,
                 defaultDirection: config.defaultDirection,

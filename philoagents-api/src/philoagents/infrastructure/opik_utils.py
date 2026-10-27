@@ -7,6 +7,13 @@ from opik.configurator.configure import OpikConfigurator
 from philoagents.config import settings
 
 
+def tracing_enabled() -> bool:
+    """Mirrors the condition in configure(): without a Comet key there is no
+    backend for OpikTracer to report to, and attaching it only produces
+    per-callback errors."""
+    return bool(settings.COMET_API_KEY and settings.COMET_PROJECT)
+
+
 def configure() -> None:
     if settings.COMET_API_KEY and settings.COMET_PROJECT:
         try:
